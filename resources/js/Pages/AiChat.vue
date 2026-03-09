@@ -13,21 +13,21 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
                         </svg>
                     </div>
-                    <div class="flex-1 pr-6">
+                    <div class="flex-1 pr-1">
                         <h1 class="text-base font-bold leading-tight">Chat AI Kesehatan</h1>
                         <p class="text-white/80 text-[10px] mt-0.5 leading-tight">Berbasis Kemenkes RI</p>
                     </div>
-                    <div class="absolute top-1 right-1 flex flex-col gap-1">
-                        <button @click="showHeader = false"
-                            class="w-6 h-6 bg-white/20 hover:bg-white/30 rounded flex items-center justify-center transition" title="Tutup Banner">
-                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        <button @click="clearChat"
+                            class="w-7 h-7 bg-white/20 hover:bg-red-400 rounded-lg flex items-center justify-center transition" title="Hapus Chat">
+                            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                             </svg>
                         </button>
-                        <button @click="clearChat"
-                            class="w-6 h-6 bg-white/20 hover:bg-red-400 rounded flex items-center justify-center transition" title="Hapus Chat">
-                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        <button @click="showHeader = false"
+                            class="w-7 h-7 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center transition" title="Tutup Banner">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
                             </svg>
                         </button>
                     </div>

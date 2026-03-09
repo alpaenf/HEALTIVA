@@ -277,40 +277,65 @@ const confirmDelete = (id) => {
 const downloadPdf = (analysis) => {
     const date = formatDate(analysis.created_at);
 
-    // Convert markdown to simple HTML for better readability
-    const html = (analysis.result ?? '')
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        .replace(/### (.+)/g, '<h3>$1</h3>')
-        .replace(/## (.+)/g, '<h2>$1</h2>')
-        .replace(/# (.+)/g, '<h1 class="section">$1</h1>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/\n- /g, '</li><li>')
-        .replace(/(<\/li><li>)/g, '$1')
-        .replace(/^- /gm, '<li>')
-        .replace(/\n\n/g, '</p><p>')
-        .replace(/\n/g, '<br>');
+    const lines = (analysis.result ?? '').split('\n');
+    let html = '<table class="analysis-table">';
+    let inSection = false;
+
+    for (const raw of lines) {
+        const line = raw.trim();
+        if (line.startsWith('# ')) {
+            // Ignore main title as we have our own
+        } else if (line.startsWith('## ')) {
+            if (inSection) html += '</td></tr>';
+            const title = line.slice(3).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>');
+            html += `<tr><th class="section-header">${title}</th></tr><tr><td class="section-content">`;
+            inSection = true;
+        } else if (line.startsWith('### ')) {
+            const subtitle = line.slice(4).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>');
+            html += `<div class="sub-header">${subtitle}</div>`;
+        } else if (line.startsWith('- ') || line.startsWith('* ')) {
+            let formatText = line.slice(2).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>');
+            if (formatText.includes(':')) {
+                let parts = formatText.split(':');
+                html += `<div class="list-row"><div class="list-label">${parts[0]}:</div><div class="list-value">${parts.slice(1).join(':')}</div></div>`;
+            } else {
+                html += `<div class="list-item">&bull; ${formatText}</div>`;
+            }
+        } else if (line !== '') {
+            let formatText = line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>');
+            html += `<p class="paragraph">${formatText}</p>`;
+        }
+    }
+    if (inSection) html += '</td></tr>';
+    html += '</table>';
 
     const content = `<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
 <title>Laporan Analisis Kesehatan - HEALTIVA</title>
 <style>
-  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 720px; margin: 0 auto; padding: 32px 24px; color: #1f2937; font-size: 14px; line-height: 1.7; }
-  .logo { color: #B92521; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; }
-  .meta { color: #6b7280; font-size: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #EFDBDC; }
-  h1 { color: #B92521; font-size: 17px; margin: 20px 0 6px; }
-  h1.section { font-size: 15px; }
-  h2 { color: #374151; font-size: 14px; margin: 16px 0 4px; }
-  h3 { color: #6b7280; font-size: 13px; margin: 12px 0 4px; }
-  p { margin: 8px 0; }
-  li { margin: 4px 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 30px; color: #1f2937; font-size: 13px; line-height: 1.6; }
+  .header-box { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #B92521; }
+  .logo { color: #B92521; font-size: 24px; font-weight: 900; letter-spacing: 1px; margin-bottom: 5px; text-transform: uppercase; }
+  .meta { color: #6b7280; font-size: 13px; font-weight: 500; }
+  .analysis-table { width: 100%; border-collapse: collapse; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .section-header { background: #FEF0F0; color: #B92521; text-align: left; padding: 12px 16px; font-size: 14px; border-bottom: 2px solid #F18E8C; border-top: 1px solid #e5e7eb; }
+  .section-content { padding: 12px 16px 16px; background: #fff; vertical-align: top; }
+  .sub-header { color: #A91127; font-weight: 700; font-size: 13px; margin: 10px 0 6px; padding-bottom: 4px; border-bottom: 1px dashed #EFDBDC; }
+  .list-row { display: flex; padding: 6px 0; border-bottom: 1px solid #f3f4f6; page-break-inside: avoid; }
+  .list-row:last-child { border-bottom: none; }
+  .list-label { width: 30%; font-weight: 600; color: #4b5563; padding-right: 15px; }
+  .list-value { width: 70%; color: #111827; }
+  .list-item { padding: 4px 0 4px 10px; position: relative; color: #374151; }
+  .paragraph { margin: 8px 0; color: #374151; }
   strong { color: #111827; }
-  .footer { margin-top: 32px; font-size: 11px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 12px; }
-  @media print { .no-print { display: none; } }
+  .footer { margin-top: 40px; text-align: center; font-size: 11px; color: #9ca3af; padding-top: 15px; border-top: 1px solid #e5e7eb; }
+  @media print { body { padding: 0; box-shadow: none; } .analysis-table { box-shadow: none; border: 1px solid #d1d5db; } }
 </style></head><body>
-<div class="logo">HEALTIVA</div>
-<div class="meta">Laporan Analisis Kesehatan &nbsp;|&nbsp; ${date}</div>
-<div>${html}</div>
-<p class="footer">Laporan ini dihasilkan oleh HEALTIVA AI. Bersifat informatif dan tidak menggantikan konsultasi dokter.</p>
+<div class="header-box">
+    <div class="logo">HEALTIVA</div>
+    <div class="meta">Laporan Analisis Kesehatan<br>${date}</div>
+</div>
+${html}
+<p class="footer">Laporan ini dihasilkan oleh HEALTIVA AI. Bersifat informatif dan tidak menggantikan diagnosa medis resmi dari dokter spesialis.</p>
 <script>window.onload = () => { window.print(); };<\/script>
 </body></html>`;
 
@@ -318,13 +343,11 @@ const downloadPdf = (analysis) => {
     const url  = URL.createObjectURL(blob);
     const win  = window.open(url, '_blank');
     if (!win) {
-        // Popup blocked — fallback: open as data URI in same tab
         const a = document.createElement('a');
         a.href = url;
         a.target = '_blank';
         a.click();
     }
-    // Revoke after 60s
     setTimeout(() => URL.revokeObjectURL(url), 60000);
 };
 

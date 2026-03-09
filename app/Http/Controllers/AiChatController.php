@@ -124,9 +124,12 @@ class AiChatController extends Controller
         $reply = trim(str_replace('[TAMPILKAN_VIDEO]', '', $reply));
         
         if ($wantVideo && $youtubeKey) {
-            // Analisis seluruh obrolan untuk mencari tahu topik apa yang dibahas
-            $fullContext = collect($request->messages)->pluck('text')->join(' ') . " " . $reply;
-            $ytQuery = $this->detectYoutubeQuery($fullContext);
+            // Analisis obrolan dari yang paling baru untuk tahu topik yang dibicarakan
+            $textsToCheck = [$reply];
+            foreach (array_reverse($request->messages) as $m) {
+                $textsToCheck[] = $m['text'];
+            }
+            $ytQuery = $this->detectYoutubeQuery($textsToCheck);
             if ($ytQuery) {
                 $searchQuery = urlencode($ytQuery);
                 try {
@@ -159,30 +162,31 @@ class AiChatController extends Controller
         ]);
     }
 
-    private function detectYoutubeQuery(string $text): ?string
+    private function detectYoutubeQuery(array $texts): ?string
     {
-        $t = strtolower($text);
-        if (preg_match('/(hipertensi|tekanan darah|tensi|sistolik|diastolik)/', $t)) return "hipertensi tekanan darah pencegahan kemenkes";
-        if (preg_match('/(diabetes|gula darah|glukosa|pradiabetes)/', $t)) return "diabetes mellitus gula darah perkeni indonesia";
-        if (preg_match('/(jantung|kardio|koroner|angina)/', $t)) return "penyakit jantung koroner pencegahan perki indonesia";
-        if (preg_match('/(bmi|berat badan|obesitas|overweight|kurus|kegemukan|diet)/', $t)) return "diet defisit kalori tips panduan cara menurunkan berat badan obesitas pemula";
-        if (preg_match('/(kolesterol|ldl|hdl|trigliserida)/', $t)) return "kolesterol tinggi pencegahan makanan sehat";
-        if (preg_match('/(stroke|serangan otak)/', $t)) return "pencegahan stroke indonesia kemenkes";
-        if (preg_match('/(ginjal|cuci darah|kreatinin)/', $t)) return "penyakit ginjal kronis pencegahan indonesia";
-        if (preg_match('/(olahraga|latihan|gym|lari|aerobik)/', $t)) return "olahraga sehat untuk jantung pemula indonesia";
-        if (preg_match('/(tidur|insomnia|susah tidur)/', $t)) return "tips tidur berkualitas kesehatan indonesia";
-        if (preg_match('/(stres|stress|kecemasan|anxiety|mental|burnout)/', $t)) return "kelola stres kesehatan mental indonesia";
-        if (preg_match('/(spo2|saturasi|oksigen|oximeter|sesak)/', $t)) return "saturasi oksigen spo2 pernapasan kesehatan";
-        if (preg_match('/(demam|suhu|panas|meriang)/', $t)) return "demam cara menurunkan penanganan kemenkes";
-        if (preg_match('/(asam urat|gout)/', $t)) return "asam urat gout pencegahan makanan indonesia";
-        if (preg_match('/(maag|lambung|gerd|refluks|asam lambung)/', $t)) return "asam lambung maag gerd cara mengatasi";
-        if (preg_match('/(anemia|kurang darah|hemoglobin)/', $t)) return "anemia kurang darah pencegahan makanan kemenkes";
-        if (preg_match('/(vitamin|suplemen|nutrisi|gizi|makan sehat)/', $t)) return "vitamin suplemen gizi seimbang indonesia kemenkes";
-        if (preg_match('/(rokok|merokok|nikotin)/', $t)) return "bahaya rokok dan cara berhenti merokok kemenkes";
-        if (preg_match('/(video|tonton|rekomendasi video|lihat video|cari video|edukasi)/', $t)) return "edukasi kesehatan hidup sehat indonesia kemenkes";
+        foreach ($texts as $text) {
+            $t = strtolower($text);
+            if (preg_match('/(stroke|serangan otak)/', $t)) return "pencegahan stroke indonesia kemenkes";
+            if (preg_match('/(jantung|kardio|koroner|angina)/', $t)) return "penyakit jantung koroner pencegahan perki indonesia";
+            if (preg_match('/(hipertensi|tekanan darah|tensi|sistolik|diastolik)/', $t)) return "hipertensi tekanan darah pencegahan kemenkes";
+            if (preg_match('/(diabetes|gula darah|glukosa|pradiabetes)/', $t)) return "diabetes mellitus gula darah perkeni indonesia";
+            if (preg_match('/(bmi|berat badan|obesitas|overweight|kurus|kegemukan|diet|kalori)/', $t)) return "diet defisit kalori tips panduan cara menurunkan berat badan obesitas pemula";
+            if (preg_match('/(kolesterol|ldl|hdl|trigliserida)/', $t)) return "kolesterol tinggi pencegahan makanan sehat";
+            if (preg_match('/(ginjal|cuci darah|kreatinin)/', $t)) return "penyakit ginjal kronis pencegahan indonesia";
+            if (preg_match('/(asam urat|gout)/', $t)) return "asam urat gout pencegahan makanan indonesia";
+            if (preg_match('/(maag|lambung|gerd|refluks|asam lambung)/', $t)) return "asam lambung maag gerd cara mengatasi";
+            if (preg_match('/(olahraga|latihan|gym|lari|aerobik)/', $t)) return "olahraga sehat untuk jantung pemula indonesia";
+            if (preg_match('/(tidur|insomnia|susah tidur)/', $t)) return "tips tidur berkualitas kesehatan indonesia";
+            if (preg_match('/(stres|stress|kecemasan|anxiety|mental|burnout)/', $t)) return "kelola stres kesehatan mental indonesia";
+            if (preg_match('/(spo2|saturasi|oksigen|oximeter|sesak)/', $t)) return "saturasi oksigen spo2 pernapasan kesehatan";
+            if (preg_match('/(demam|suhu|panas|meriang)/', $t)) return "demam cara menurunkan penanganan kemenkes";
+            if (preg_match('/(anemia|kurang darah|hemoglobin)/', $t)) return "anemia kurang darah pencegahan makanan kemenkes";
+            if (preg_match('/(vitamin|suplemen|nutrisi|gizi|makan sehat)/', $t)) return "vitamin suplemen gizi seimbang indonesia kemenkes";
+            if (preg_match('/(rokok|merokok|nikotin)/', $t)) return "bahaya rokok dan cara berhenti merokok kemenkes";
+        }
         
         // Fallback: Jika tidak ada kata kunci spesifik, cari apa saja yang dibicarakan user
-        return mb_substr($text, 0, 40) . " tips kesehatan medis terpercaya";
+        return "tips kesehatan medis terpercaya dokter";
     }
 
     private function ruleBasedReply(string $lastMsg, $record, $user): string
