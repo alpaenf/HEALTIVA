@@ -1,11 +1,11 @@
 <template>
     <div class="min-h-screen bg-app font-poppins">
 
-        <!-- â”€â”€â”€ DESKTOP SIDEBAR (lg+) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ─── DESKTOP SIDEBAR (lg+) ─────────────────────────────── -->
         <aside class="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-64 bg-white shadow-lg z-40 border-r border-gray-100">
             <!-- Logo -->
             <div class="flex items-center px-2 -mb-5 border-b border-gray-100">
-                <img src="/images/logo.png" alt="HEALTIVA" class="h-[120px] w-auto" />
+                <img src="/images/logo.png" alt="Healtiva" class="h-[120px] w-auto" />
             </div>
 
             <!-- Nav Links -->
@@ -101,11 +101,11 @@
             </div>
         </aside>
 
-        <!-- â”€â”€â”€ MOBILE TOP HEADER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ─── MOBILE TOP HEADER ──────────────────────────────────── -->
         <header class="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
             <div class="px-2 py-0.5 flex items-center justify-between">
                 <div class="flex items-center">
-                    <img src="/images/logo.png" alt="HEALTIVA" class="h-[60px] w-auto" />
+                    <img src="/images/logo.png" alt="Healtiva" class="h-[60px] w-auto" />
                 </div>
                 <Link href="/profile" class="block w-10 h-10 rounded-xl overflow-hidden shadow flex-shrink-0 active:opacity-80 transition">
                     <img v-if="user?.avatar" :src="userAvatarUrl" class="w-full h-full object-cover" alt="avatar" />
@@ -116,7 +116,7 @@
             </div>
         </header>
 
-        <!-- â”€â”€â”€ DESKTOP TOP BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ─── DESKTOP TOP BAR ────────────────────────────────────── -->
         <div class="hidden lg:flex fixed top-0 left-64 right-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 px-8 py-3 items-center justify-between">
             <div>
                 <p class="text-xs text-gray-400">{{ greeting }},</p>
@@ -125,7 +125,7 @@
             <span class="text-xs text-gray-400 bg-gray-100 px-3 py-1.5 rounded-full">{{ currentDate }}</span>
         </div>
 
-        <!-- â”€â”€â”€ FLASH MESSAGES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ─── FLASH MESSAGES ─────────────────────────────────────── -->
         <transition name="flash">
             <div v-if="$page.props.flash?.success || $page.props.flash?.error"
                 class="fixed z-50 top-16 lg:top-4 left-0 right-0 lg:left-64 px-4 lg:px-8 pt-2 pointer-events-none">
@@ -140,7 +140,7 @@
             </div>
         </transition>
 
-        <!-- â”€â”€â”€ MAIN CONTENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ─── MAIN CONTENT ───────────────────────────────────────── -->
         <main class="lg:ml-64 px-4 lg:px-8 xl:px-10 pt-20 pb-28 lg:pt-20 lg:pb-10 min-h-screen">
             <Transition name="page-fade" mode="out-in">
                 <div :key="$page.url">
@@ -149,7 +149,7 @@
             </Transition>
         </main>
 
-        <!-- â”€â”€â”€ MOBILE BOTTOM NAV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <!-- ─── MOBILE BOTTOM NAV ──────────────────────────────────── -->
         <BottomNavBar class="lg:hidden" />
     </div>
 </template>

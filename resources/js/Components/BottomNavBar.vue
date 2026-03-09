@@ -13,18 +13,16 @@
                     <span v-if="rippling === item.name"
                         class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-primary/20 animate-nav-ripple pointer-events-none"/>
 
-                    <!-- Icon circle -->
+                    <!-- Icon capsule -->
                     <span :class="[
-                        'relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300',
+                        'relative flex items-center justify-center rounded-full transition-all duration-300',
                         isActive(item.href)
-                            ? 'bg-gradient-to-br from-primary to-primary-dark shadow-lg shadow-primary/40 scale-110'
-                            : 'bg-gray-100/80 group-hover:bg-gray-200/80',
+                            ? 'w-14 h-9 bg-gradient-to-br from-primary to-primary-dark shadow-lg shadow-primary/40'
+                            : 'w-11 h-11 bg-gray-100/80 group-hover:bg-gray-200/80',
                         tapping === item.name ? 'scale-90' : '',
                     ]">
                         <component :is="item.icon"
                             :class="['w-5 h-5 transition-all duration-300', isActive(item.href) ? 'text-white' : 'text-gray-400 group-hover:text-gray-600']"/>
-                        <span v-if="isActive(item.href)"
-                            class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full"/>
                     </span>
 
                     <!-- Label -->
@@ -35,8 +33,8 @@
                 <button @click="toggleMore"
                     class="flex flex-col items-center gap-1 min-w-[60px] relative group outline-none">
                     <span :class="[
-                        'relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300',
-                        showMore ? 'bg-gradient-to-br from-primary to-primary-dark shadow-lg shadow-primary/40 scale-110' : 'bg-gray-100/80 group-hover:bg-gray-200/80',
+                        'relative flex items-center justify-center rounded-full transition-all duration-300',
+                        showMore ? 'w-14 h-9 bg-gradient-to-br from-primary to-primary-dark shadow-lg shadow-primary/40' : 'w-11 h-11 bg-gray-100/80 group-hover:bg-gray-200/80',
                     ]">
                         <svg class="w-5 h-5 transition-all duration-300" :class="showMore ? 'text-white' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>

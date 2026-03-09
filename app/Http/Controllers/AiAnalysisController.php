@@ -7,6 +7,7 @@ use App\Services\GeminiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 
 class AiAnalysisController extends Controller
@@ -20,14 +21,71 @@ class AiAnalysisController extends Controller
         $latestAnalysis = $analyses->first();
         $hasRecords = $user->healthRecords()->exists();
 
-        // Reuse YouTube videos cached by Edukasi page (no extra API call)
+        // Reuse YouTube videos cached by Edukasi page; populate via API if cache is empty
         $eduVideos = Cache::get('edukasi_videos_all', []);
 
+        if (empty($eduVideos)) {
+            $apiKey = config('services.youtube.api_key');
+            if (!empty($apiKey)) {
+                try {
+                    $queries = [
+                        'heart'     => 'hipertensi tekanan darah jantung koroner kemenkes',
+                        'diabetes'  => 'diabetes mellitus gula darah perkeni kemenkes',
+                        'nutrition' => 'gizi seimbang IMT BMI nutrisi kemenkes',
+                        'lifestyle' => 'gaya hidup sehat olahraga kesehatan indonesia',
+                        'mental'    => 'kesehatan mental stres kecemasan indonesia',
+                    ];
+                    $all = [];
+                    $id  = 1;
+                    foreach ($queries as $category => $query) {
+                        $resp = Http::timeout(10)->get('https://www.googleapis.com/youtube/v3/search', [
+                            'part'              => 'snippet',
+                            'q'                 => $query,
+                            'type'              => 'video',
+                            'maxResults'        => 6,
+                            'relevanceLanguage' => 'id',
+                            'regionCode'        => 'ID',
+                            'safeSearch'        => 'strict',
+                            'key'               => $apiKey,
+                        ]);
+                        if ($resp->failed()) continue;
+                        foreach ($resp->json('items', []) as $item) {
+                            $videoId = $item['id']['videoId'] ?? null;
+                            if (!$videoId) continue;
+                            $snippet = $item['snippet'];
+                            $all[] = [
+                                'id'          => $id++,
+                                'youtubeId'   => $videoId,
+                                'category'    => $category,
+                                'title'       => $snippet['title'],
+                                'desc'        => mb_substr(strip_tags($snippet['description'] ?? ''), 0, 120) . '…',
+                                'channel'     => $snippet['channelTitle'],
+                                'source'      => $snippet['channelTitle'],
+                                'duration'    => null,
+                                'publishedAt' => substr($snippet['publishedAt'] ?? '', 0, 10),
+                            ];
+                        }
+                    }
+                    if (!empty($all)) {
+                        Cache::put('edukasi_videos_all', $all, now()->addHours(6));
+                        $eduVideos = $all;
+                    }
+                } catch (\Exception $e) {
+                    // Keep empty fallback; static videos will be used on frontend
+                }
+            }
+        }
+
         return Inertia::render('AiAnalysis', [
-            'analyses'      => $analyses,
+            'analyses'       => $analyses,
             'latestAnalysis' => $latestAnalysis,
-            'hasRecords'    => $hasRecords,
-            'eduVideos'     => $eduVideos,
+            'hasRecords'     => $hasRecords,
+            'eduVideos'      => $eduVideos,
+            'userInfo'       => [
+                'name'   => $user->name,
+                'gender' => $user->gender,
+                'age'    => $user->date_of_birth ? $user->date_of_birth->age : null,
+            ],
         ]);
     }
 

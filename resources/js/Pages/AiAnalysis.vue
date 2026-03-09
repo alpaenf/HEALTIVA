@@ -192,14 +192,14 @@
                                                target="_blank" rel="noopener noreferrer"
                                                class="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-gray-100 hover:border-[#FF0000]/30 hover:bg-red-50/40 transition-all group">
                                                 <!-- Thumbnail -->
-                                                <div class="relative w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200">
+                                                <div class="relative w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 shadow-sm">
                                                     <img
-                                                        :src="`https://img.youtube.com/vi/${vid.youtubeId}/mqdefault.jpg`"
+                                                        :src="`https://i.ytimg.com/vi/${vid.youtubeId}/hqdefault.jpg`"
                                                         :alt="vid.title"
                                                         class="w-full h-full object-cover"
                                                     />
-                                                    <div class="absolute inset-0 flex items-center justify-center bg-black/25 group-hover:bg-black/10 transition">
-                                                        <div class="w-5 h-5 bg-white/90 rounded-full flex items-center justify-center">
+                                                    <div class="absolute inset-0 flex items-center justify-center group-hover:bg-black/5 transition">
+                                                        <div class="w-5 h-5 bg-white/90 rounded-full flex items-center justify-center shadow-sm">
                                                             <svg class="w-2.5 h-2.5 text-[#FF0000] ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                                                         </div>
                                                     </div>
@@ -242,6 +242,7 @@ const props = defineProps({
     latestAnalysis: Object,
     hasRecords:     Boolean,
     eduVideos:      { type: Array, default: () => [] },
+    userInfo:       { type: Object, default: () => ({}) },
 });
 
 const analyzing = ref(false);
@@ -274,67 +275,111 @@ const confirmDelete = (id) => {
     }
 };
 
-const downloadPdf = (analysis) => {
+const downloadPdf = async (analysis) => {
     const date = formatDate(analysis.created_at);
+
+    // Load logo as base64 so it works offline in the generated HTML
+    let logoHtml = '<div class="logo-text">HEALTIVA</div>';
+    try {
+        const resp = await fetch('/images/logo.png');
+        if (resp.ok) {
+            const blob = await resp.blob();
+            const b64 = await new Promise(res => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(blob); });
+            logoHtml = `<img src="${b64}" alt="HEALTIVA" class="logo-img">`;
+        }
+    } catch (_) {}
+
+    // Build identity block
+    const gender = props.userInfo?.gender === 'male' ? 'Laki-laki' : props.userInfo?.gender === 'female' ? 'Perempuan' : (props.userInfo?.gender ?? '-');
+    const identityHtml = `
+    <table class="identity-table">
+        <tr>
+            <td class="id-label">Nama</td>
+            <td class="id-sep">:</td>
+            <td class="id-val">${props.userInfo?.name ?? '-'}</td>
+            <td class="id-label">Usia</td>
+            <td class="id-sep">:</td>
+            <td class="id-val">${props.userInfo?.age ? props.userInfo.age + ' tahun' : '-'}</td>
+        </tr>
+        <tr>
+            <td class="id-label">Tanggal Cetak</td>
+            <td class="id-sep">:</td>
+            <td class="id-val">${date}</td>
+            <td class="id-label">Jenis Kelamin</td>
+            <td class="id-sep">:</td>
+            <td class="id-val">${gender}</td>
+        </tr>
+    </table>
+    <div class="id-divider"></div>`;
+
+    const date_str = date;
 
     const lines = (analysis.result ?? '').split('\n');
     let html = '<table class="analysis-table">';
-    let inSection = false;
 
     for (const raw of lines) {
         const line = raw.trim();
-        if (line.startsWith('# ')) {
-            // Ignore main title as we have our own
-        } else if (line.startsWith('## ')) {
-            if (inSection) html += '</table></td></tr>';
-            const title = line.slice(3).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>');
-            html += `<tr><th class="section-header">${title}</th></tr><tr><td class="section-content"><table class="inner-table">`;
-            inSection = true;
-        } else if (line.startsWith('### ')) {
-            const subtitle = line.slice(4).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>');
-            html += `<tr><td colspan="2" class="sub-header">${subtitle}</td></tr>`;
-        } else if (line.startsWith('- ') || line.startsWith('* ')) {
-            let formatText = line.slice(2).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>');
-            if (formatText.includes(':')) {
-                let parts = formatText.split(':');
-                html += `<tr><td class="list-label">${parts[0]}:</td><td class="list-value">${parts.slice(1).join(':')}</td></tr>`;
-            } else {
-                html += `<tr><td colspan="2" class="list-item">&bull; ${formatText}</td></tr>`;
-            }
-        } else if (line !== '') {
-            let formatText = line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>');
-            html += `<tr><td colspan="2" class="paragraph">${formatText}</td></tr>`;
+        if (!line) continue;
+
+        let formatted = line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+        if (line.match(/^(#+|(?:\d+\.)?\s*(?:Ringkasan|Analisis|Rekomendasi|Kesimpulan|Status|Evaluasi|Parameter|Tindakan))/i) && !line.includes(': ')) {
+            let title = formatted.replace(/^[#\s]+/, '');
+            html += `<tr><th colspan="2" class="main-header">${title}</th></tr>`;
+        } else if (line.includes(': ')) {
+            let parts = formatted.split(': ');
+            let key = parts[0];
+            let val = parts.slice(1).join(': ');
+            html += `<tr><td class="key-cell">${key}</td><td class="val-cell">${val}</td></tr>`;
+        } else {
+            html += `<tr><td colspan="2" class="text-cell">${formatted}</td></tr>`;
         }
     }
-    if (inSection) html += '</table></td></tr>';
     html += '</table>';
 
     const content = `<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
 <title>Laporan Analisis Kesehatan - HEALTIVA</title>
 <style>
-  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 30px; color: #1f2937; font-size: 13px; line-height: 1.6; }
-  .header-box { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #B92521; }
-  .logo { color: #B92521; font-size: 24px; font-weight: 900; letter-spacing: 1px; margin-bottom: 5px; text-transform: uppercase; }
-  .meta { color: #6b7280; font-size: 13px; font-weight: 500; }
-  .analysis-table { width: 100%; border-collapse: collapse; border: 2px solid #374151; }
-  .section-header { background: #FEF0F0; color: #B92521; text-align: left; padding: 12px 16px; font-size: 14px; border-bottom: 2px solid #374151; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .section-content { padding: 0; background: #fff; vertical-align: top; border-bottom: 2px solid #374151; }
-  .inner-table { width: 100%; border-collapse: collapse; }
-  .inner-table td { border-bottom: 1px solid #9ca3af; padding: 8px 16px; }
-  .inner-table tr:last-child td { border-bottom: none; }
-  .sub-header { color: #A91127; font-weight: 700; font-size: 13px; background: #fafafa; border-bottom: 1px solid #9ca3af; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .list-label { width: 33%; font-weight: 600; color: #4b5563; border-right: 1px solid #9ca3af; vertical-align: top; }
-  .list-value { width: 67%; color: #111827; }
-  .list-item { padding-left: 20px; color: #374151; }
-  .paragraph { color: #374151; }
-  strong { color: #111827; }
-  .footer { margin-top: 40px; text-align: center; font-size: 11px; color: #9ca3af; padding-top: 15px; border-top: 1px solid #e5e7eb; }
-  @media print { body { padding: 0; } .analysis-table { border: 2px solid #111; } .section-header { border-bottom: 2px solid #111; border-top: 2px solid #111; } .section-content { border-bottom: 2px solid #111; } .inner-table td, .sub-header, .list-label { border-color: #666; } }
+  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 18px 30px 30px; color: #1f2937; font-size: 13px; line-height: 1.6; }
+  .header-box { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 3px solid #B92521; }
+  .logo-img { height: 88px; width: auto; object-fit: contain; }
+  .logo-text { color: #B92521; font-size: 24px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
+  .header-right { text-align: right; }
+  .header-title { font-weight: 700; font-size: 13px; color: #374151; }
+  .header-sub { font-size: 11px; color: #6b7280; margin-top: 2px; }
+  
+  .identity-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 13px; }
+  .id-label { color: #6b7280; width: 18%; font-weight: 600; padding: 4px 6px 4px 0; }
+  .id-sep { color: #6b7280; width: 2%; padding: 4px 6px; }
+  .id-val { color: #111827; font-weight: 500; width: 30%; padding: 4px 6px; }
+  .id-divider { border-top: 1px solid #e5e7eb; margin-bottom: 18px; }
+  
+  .analysis-table { width: 100%; border-collapse: collapse; border: 2px solid #111827; margin-bottom: 20px; }
+  .analysis-table th, .analysis-table td { border: 1px solid #6b7280; padding: 10px 14px; vertical-align: top; }
+  
+  .main-header { background-color: #FEF0F0; color: #A91127; text-align: left; font-size: 14px; border-bottom: 2px solid #111827; border-top: 2px solid #111827; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .key-cell { width: 35%; font-weight: 700; color: #374151; background-color: #f9fafb; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .val-cell { width: 65%; color: #111827; }
+  .text-cell { color: #374151; padding: 12px 14px; }
+  
+  strong { color: #000; font-weight: 700; }
+  .footer { margin-top: 30px; text-align: center; font-size: 11px; color: #6b7280; padding-top: 15px; border-top: 1px dashed #d1d5db; }
+  
+  @media print { 
+      body { padding: 0; } 
+      .analysis-table { border: 2px solid #000; } 
+      .analysis-table th, .analysis-table td { border: 1pt solid #000; } 
+      .main-header { border-bottom: 2pt solid #000; border-top: 2pt solid #000; }
+  }
 </style></head><body>
 <div class="header-box">
-    <div class="logo">HEALTIVA</div>
-    <div class="meta">Laporan Analisis Kesehatan<br>${date}</div>
+    <div>${logoHtml}</div>
+    <div class="header-right">
+        <div class="header-title">Laporan Analisis Kesehatan</div>
+        <div class="header-sub">${date}</div>
+    </div>
 </div>
+${identityHtml}
 ${html}
 <p class="footer">Laporan ini dihasilkan oleh HEALTIVA AI. Bersifat informatif dan tidak menggantikan diagnosa medis resmi dari dokter spesialis.</p>
 <script>window.onload = () => { window.print(); };<\/script>
@@ -364,18 +409,21 @@ const shareWhatsApp = (analysis) => {
 
 // Static fallback (used when YouTube API cache is not yet populated)
 const staticEduVideos = [
-    { id: 1,  youtubeId: 'b2iSH4VKpXo', category: 'heart',     title: 'Hipertensi: Penyebab, Gejala dan Penanganannya',                channel: 'Kemenkes RI' },
-    { id: 2,  youtubeId: 'l0C_GsEINHs', category: 'heart',     title: 'Penyakit Jantung Koroner: Kenali dan Cegah Sejak Dini',        channel: 'PERKI Indonesia' },
-    { id: 3,  youtubeId: 'fIAB4vdqYaQ', category: 'diabetes',  title: 'Diabetes Melitus Tipe 2: Gejala dan Pencegahan',               channel: 'Kemenkes RI' },
-    { id: 4,  youtubeId: 'wuU1TGqV6IU', category: 'diabetes',  title: 'Pola Makan Sehat untuk Penderita Diabetes',                   channel: 'PERKENI' },
-    { id: 5,  youtubeId: 'tFnFDFNITKs', category: 'nutrition', title: 'Cara Menghitung IMT dan Kategori Berat Badan',                 channel: 'Kemenkes RI' },
-    { id: 6,  youtubeId: 'Yt59GKQ7oN8', category: 'nutrition', title: 'Pedoman Gizi Seimbang Isi Piringku',                          channel: 'Kemenkes RI' },
-    { id: 7,  youtubeId: 'gHbYJfwFgOU', category: 'lifestyle', title: 'Manfaat Olahraga Rutin bagi Kesehatan Jantung',               channel: 'WHO Indonesia' },
-    { id: 8,  youtubeId: 'MXuSCKuHe7I', category: 'lifestyle', title: 'Bahaya Rokok bagi Kesehatan Jantung dan Paru',               channel: 'Kemenkes RI' },
-    { id: 9,  youtubeId: 'vgVGKyLpxeU', category: 'mental',    title: 'Cara Mengelola Stres untuk Kesehatan Optimal',               channel: 'Kemenkes RI' },
-    { id: 10, youtubeId: 'wcHHSRMVHQE', category: 'heart',     title: 'Pertolongan Pertama pada Serangan Jantung',                  channel: 'PERKI Indonesia' },
-    { id: 11, youtubeId: 'VHxpfgfonSk', category: 'diabetes',  title: 'Olahraga Aman dan Efektif untuk Penderita Diabetes',         channel: 'PERKENI' },
-    { id: 12, youtubeId: 'nm1TxQj9IsQ', category: 'lifestyle', title: 'Tips Tidur Berkualitas untuk Kesehatan Optimal',             channel: 'Kemenkes RI' },
+    { id: 1,  youtubeId: 'b2iSH4VKpXo', keywords: ['hipertensi','tekanan darah','sistolik','diastolik','tensi'],      title: 'Hipertensi: Penyebab, Gejala dan Penanganannya',             channel: 'Kemenkes RI' },
+    { id: 2,  youtubeId: 'l0C_GsEINHs', keywords: ['jantung','koroner','kardio','angina','pembuluh darah'],            title: 'Penyakit Jantung Koroner: Kenali dan Cegah Sejak Dini',      channel: 'PERKI Indonesia' },
+    { id: 3,  youtubeId: 'fIAB4vdqYaQ', keywords: ['diabetes','gula darah','glukosa','hiperglikemia','pradiabetes'],   title: 'Diabetes Melitus Tipe 2: Gejala dan Pencegahan',             channel: 'Kemenkes RI' },
+    { id: 4,  youtubeId: 'wuU1TGqV6IU', keywords: ['gula darah','diabetes','pola makan','diet','nutrisi'],             title: 'Pola Makan Sehat untuk Penderita Diabetes',                 channel: 'PERKENI' },
+    { id: 5,  youtubeId: 'tFnFDFNITKs', keywords: ['bmi','berat badan','imt','overweight','obesitas','kegemukan'],     title: 'Cara Menghitung IMT dan Kategori Berat Badan',               channel: 'Kemenkes RI' },
+    { id: 6,  youtubeId: 'Yt59GKQ7oN8', keywords: ['gizi','nutrisi','makan','diet','pola makan','kalori'],             title: 'Pedoman Gizi Seimbang Isi Piringku',                        channel: 'Kemenkes RI' },
+    { id: 7,  youtubeId: 'gHbYJfwFgOU', keywords: ['olahraga','aktivitas fisik','latihan','aerobik','jantung'],        title: 'Manfaat Olahraga Rutin bagi Kesehatan Jantung',             channel: 'WHO Indonesia' },
+    { id: 8,  youtubeId: 'MXuSCKuHe7I', keywords: ['rokok','merokok','nikotin','paru','jantung'],                      title: 'Bahaya Rokok bagi Kesehatan Jantung dan Paru',              channel: 'Kemenkes RI' },
+    { id: 9,  youtubeId: 'vgVGKyLpxeU', keywords: ['stres','stress','mental','kecemasan','psikologi','burnout'],       title: 'Cara Mengelola Stres untuk Kesehatan Optimal',              channel: 'Kemenkes RI' },
+    { id: 10, youtubeId: 'wcHHSRMVHQE', keywords: ['serangan jantung','jantung','berhenti','cpr','resusitasi'],        title: 'Pertolongan Pertama pada Serangan Jantung',                 channel: 'PERKI Indonesia' },
+    { id: 11, youtubeId: 'VHxpfgfonSk', keywords: ['diabetes','olahraga','gula darah','aktivitas fisik','latihan'],    title: 'Olahraga Aman dan Efektif untuk Penderita Diabetes',        channel: 'PERKENI' },
+    { id: 12, youtubeId: 'nm1TxQj9IsQ', keywords: ['tidur','insomnia','istirahat','kualitas tidur','sleep'],           title: 'Tips Tidur Berkualitas untuk Kesehatan Optimal',            channel: 'Kemenkes RI' },
+    { id: 13, youtubeId: 'wOOYS3KDVKY', keywords: ['kolesterol','ldl','hdl','trigliserida','lemak darah'],             title: 'Kolesterol Tinggi: Bahaya dan Cara Mengatasinya',           channel: 'Kemenkes RI' },
+    { id: 14, youtubeId: 'b0c-FhNdBnk', keywords: ['spo2','saturasi','oksigen','sesak','pernapasan','paru'],           title: 'Saturasi Oksigen Normal dan Cara Menjaganya',               channel: 'Kemenkes RI' },
+    { id: 15, youtubeId: 'fL2NI1Nj0Pk', keywords: ['obesitas','berat badan','overweight','diet','kegemukan','bmi'],   title: 'Cara Menurunkan Berat Badan secara Sehat',                  channel: 'Kemenkes RI' },
 ];
 
 // Use live YouTube videos from cache (populated when user visits Edukasi), else static
@@ -386,17 +434,40 @@ const allEduVideos = computed(() =>
 const getRelatedVideos = (text) => {
     if (!text) return [];
     const t = text.toLowerCase();
-    const scored = allEduVideos.value.map(v => {
+
+    // Score against staticEduVideos (they always have keywords).
+    const scored = staticEduVideos.map(v => {
         let score = 0;
-        if (v.category === 'heart'     && (t.includes('hipertensi') || t.includes('tekanan darah') || t.includes('jantung') || t.includes('sistolik') || t.includes('kardio'))) score += 3;
-        if (v.category === 'diabetes'  && (t.includes('diabetes') || t.includes('gula darah') || t.includes('glukosa') || t.includes('hiperglikemia'))) score += 3;
-        if (v.category === 'nutrition' && (t.includes('bmi') || t.includes('berat badan') || t.includes('obesitas') || t.includes('gizi') || t.includes('imt') || t.includes('overweight'))) score += 3;
-        if (v.category === 'lifestyle' && (t.includes('olahraga') || t.includes('aktivitas') || t.includes('rokok') || t.includes('tidur') || t.includes('gaya hidup'))) score += 3;
-        if (v.category === 'mental'    && (t.includes('stres') || t.includes('mental') || t.includes('psikologi') || t.includes('kecemasan'))) score += 3;
+        for (const kw of (v.keywords ?? [])) {
+            const matches = (t.match(new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')) || []).length;
+            score += matches * 2;
+        }
         return { ...v, score };
     });
-    const matched = scored.filter(v => v.score > 0).sort((a, b) => b.score - a.score).slice(0, 3);
-    return matched.length > 0 ? matched : allEduVideos.value.slice(0, 3);
+
+    const matched = scored
+        .filter(v => v.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 3);
+
+    // Fallback: generic healthy-lifestyle videos
+    const candidates = matched.length > 0 ? matched : staticEduVideos.filter(v =>
+        ['olahraga','gizi','tidur','stres'].some(k => (v.keywords ?? []).includes(k))
+    ).slice(0, 3);
+
+    // If live API videos are available, find a live video whose title matches
+    // one of this static entry's keywords and substitute its ID + channel.
+    const liveVideos = props.eduVideos && props.eduVideos.length > 0 ? props.eduVideos : null;
+    if (!liveVideos) return candidates;
+
+    return candidates.map(sv => {
+        const liveMatch = liveVideos.find(lv =>
+            (sv.keywords ?? []).some(kw => (lv.title ?? '').toLowerCase().includes(kw))
+        );
+        return liveMatch
+            ? { ...sv, youtubeId: liveMatch.youtubeId, channel: liveMatch.channel, title: liveMatch.title }
+            : sv;
+    });
 };
 
 const formatDate = (d) => new Date(d).toLocaleDateString('id-ID', {

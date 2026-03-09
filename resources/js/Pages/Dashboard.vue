@@ -3,40 +3,34 @@
         <Head title="Dashboard" />
 
         <!-- Greeting Banner -->
-        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary to-primary-dark text-white p-5 mb-5 animate-fade-in-down">
-            <!-- decorative circles -->
-            <div class="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full"></div>
-            <div class="absolute top-4 -right-2 w-16 h-16 bg-white/5 rounded-full"></div>
-            <div class="absolute -bottom-8 -left-4 w-24 h-24 bg-white/5 rounded-full"></div>
-
-            <div class="relative flex items-center justify-between">
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-[#C63632] to-primary-dark text-white p-6 mb-5 animate-fade-in-down shadow-xl shadow-primary/20">
+            <!-- Modern subtle abstract decorations (White/Glassy glows instead of hard circles) -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-3xl rounded-full -translate-y-1/2 translate-x-1/3"></div>
+            <div class="absolute bottom-0 left-0 w-48 h-48 bg-black/10 blur-2xl rounded-full translate-y-1/2 -translate-x-1/4"></div>
+            
+            <div class="relative flex items-center justify-between z-10">
                 <div>
-                    <p class="text-white/70 text-sm">{{ greeting }},</p>
-                    <h1 class="text-2xl font-bold mt-0.5">{{ user?.name?.split(' ')[0] }}</h1>
-                    <p class="text-white/60 text-xs mt-1">{{ currentDate }}</p>
+                    <p class="text-white/80 text-sm font-medium tracking-wide uppercase">{{ greeting }}</p>
+                    <h1 class="text-3xl font-bold mt-1 tracking-tight text-white">{{ user?.name?.split(' ')[0] }}</h1>
+                    <p class="text-white/70 text-xs mt-1.5 font-medium">{{ currentDate }}</p>
                 </div>
-                <div class="text-right">
-                    <div class="relative w-20 h-20">
-                        <svg class="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
-                            <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="7"/>
-                            <circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="7"
+                <div class="text-right flex flex-col items-end">
+                    <div class="relative w-20 h-20 mb-1">
+                        <!-- Redesigned professional ring -->
+                        <svg class="w-20 h-20 -rotate-90 drop-shadow-md" viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="4"/>
+                            <circle cx="40" cy="40" r="34" fill="none" class="stroke-white" stroke-width="5"
                                 stroke-linecap="round"
-                                :stroke-dasharray="`${(healthScore / 100) * 201} 201`"
-                                class="transition-all duration-1000" />
+                                :stroke-dasharray="`${(healthScore / 100) * 213.6} 213.6`"
+                                style="transition: stroke-dasharray 1.5s ease-out;" />
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="text-xl font-bold leading-none">{{ healthScore }}</span>
-                            <span class="text-[9px] text-white/70 leading-none mt-0.5">SKOR</span>
+                            <span class="text-2xl font-black leading-none text-white">{{ healthScore }}</span>
                         </div>
                     </div>
-                    <p class="text-[10px] text-white/70 mt-1">{{ healthScoreLabel }}</p>
+                    <p class="text-xs font-semibold text-white/90 uppercase tracking-wider">{{ healthScoreLabel }}</p>
+                    <p class="text-[9px] text-white/60 mt-0.5 font-medium tracking-widest uppercase">Skor Kesehatan</p>
                 </div>
-            </div>
-
-            <!-- Progress bar -->
-            <div class="relative mt-4 h-1.5 bg-white/20 rounded-full overflow-hidden">
-                <div class="h-full bg-white rounded-full transition-all duration-1000"
-                    :style="`width:${healthScore}%`"></div>
             </div>
         </div>
 
