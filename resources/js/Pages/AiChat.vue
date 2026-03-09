@@ -2,31 +2,32 @@
     <AppLayout>
         <Head title="Chat AI Kesehatan" />
 
-        <!-- Header -->
-        <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary via-primary to-primary-dark text-white p-3 px-4 mb-4 animate-fade-in-down shadow-sm">
-            <div class="absolute -top-4 -right-4 w-20 h-20 bg-white/10 rounded-full"></div>
-            <div class="absolute -bottom-6 -left-2 w-16 h-16 bg-white/5 rounded-full"></div>
-            <div class="relative flex items-center gap-3">
-                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-                    </svg>
+        <div class="flex flex-col h-[calc(100dvh-192px)] lg:h-[calc(100vh-120px)]">
+            <!-- Header -->
+            <div class="flex-none relative overflow-hidden rounded-xl bg-gradient-to-br from-primary via-primary to-primary-dark text-white p-3 px-4 mb-3 animate-fade-in-down shadow-sm">
+                <div class="absolute -top-4 -right-4 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div class="absolute -bottom-6 -left-2 w-16 h-16 bg-white/5 rounded-full"></div>
+                <div class="relative flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h1 class="text-base font-bold leading-tight">Chat AI Kesehatan</h1>
+                        <p class="text-white/80 text-[10px] mt-0.5 leading-tight">Berbasis Kemenkes RI & medis terpercaya</p>
+                    </div>
+                    <button @click="clearChat"
+                        class="w-7 h-7 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center transition" title="Bersihkan chat">
+                        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </button>
                 </div>
-                <div class="flex-1">
-                    <h1 class="text-base font-bold leading-tight">Chat AI Kesehatan</h1>
-                    <p class="text-white/80 text-[10px] mt-0.5 leading-tight">Berbasis Kemenkes RI & medis terpercaya</p>
-                </div>
-                <button @click="clearChat"
-                    class="w-7 h-7 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center transition" title="Bersihkan chat">
-                    <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
-                </button>
             </div>
-        </div>
 
-        <!-- Chat Container -->
-        <div class="flex flex-col" style="height: calc(100dvh - 310px); min-height: 350px;">
+            <!-- Chat Container -->
+            <div class="flex flex-col flex-1 min-h-0">
 
             <!-- Messages -->
             <div ref="messagesEl" class="flex-1 overflow-y-auto space-y-3 pr-1 pb-3 scroll-smooth overscroll-contain">
@@ -135,14 +136,14 @@
             </div>
 
             <!-- Input -->
-            <div class="flex items-end gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm focus-within:border-primary/40 focus-within:shadow-primary/10 transition-all">
+            <div class="flex-none flex items-end gap-2 bg-white rounded-2xl border border-gray-200 px-4 py-3 shadow-sm focus-within:border-primary/40 focus-within:shadow-primary/10 transition-all mt-1">
                 <textarea
                     ref="inputEl"
                     v-model="inputText"
                     @keydown.enter.exact.prevent="send"
                     rows="1"
                     placeholder="Tanyakan seputar kesehatan Andaâ€¦"
-                    class="flex-1 resize-none text-sm outline-none text-gray-700 placeholder-gray-400 bg-transparent max-h-32"
+                    class="flex-1 resize-none text-sm outline-none text-gray-700 placeholder-gray-400 bg-transparent max-h-24 md:max-h-32"
                     style="min-height:24px"
                     @input="autoResize"
                 ></textarea>
@@ -157,6 +158,7 @@
                     </svg>
                 </button>
             </div>
+        </div>
         </div>
 
     </AppLayout>
