@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="min-h-screen bg-white font-poppins overflow-x-hidden">
 
         <!-- â”€â”€ FLOATING NAVBAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->

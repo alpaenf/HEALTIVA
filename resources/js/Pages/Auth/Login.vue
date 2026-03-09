@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <h2 class="text-lg font-bold text-gray-800 mb-0.5">Selamat Datang</h2>
     <p class="text-xs text-gray-500 mb-4">Masuk ke akun HEALTIVA Anda</p>
 

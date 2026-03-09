@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="auth-root font-poppins overflow-hidden">
 
         <!-- ======= DESKTOP (lg+) ======= -->

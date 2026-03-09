@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="min-h-screen bg-gray-50 font-poppins lg:flex">
 
         <!-- â”€â”€ SIDEBAR (Desktop only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->

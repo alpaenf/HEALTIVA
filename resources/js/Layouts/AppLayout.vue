@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="min-h-screen bg-app font-poppins">
 
         <!-- â”€â”€â”€ DESKTOP SIDEBAR (lg+) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->

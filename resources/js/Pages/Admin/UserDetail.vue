@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <AdminLayout>
         <Head :title="`Detail - ${user.name}`" />
 

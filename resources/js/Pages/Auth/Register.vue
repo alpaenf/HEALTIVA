@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <h2 class="text-base font-bold text-gray-800 mb-0.5">Buat Akun</h2>
     <p class="text-xs text-gray-500 mb-3">Daftar untuk mulai memantau kesehatan Anda</p>
 

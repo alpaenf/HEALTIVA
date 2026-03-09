@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 <div class="lg:hidden">
     <nav class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-[0_-4px_24px_rgba(0,0,0,0.07)]">
         <div class="max-w-lg mx-auto px-1">
