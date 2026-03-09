@@ -38,7 +38,7 @@
 
                 <!-- Panel content -->
                 <div class="relative h-full flex flex-col p-12 z-10">
-                    <img src="/images/logo.png" alt="Medix" class="h-20 w-auto max-w-[320px] object-contain brightness-0 invert" />
+                    <img src="/images/logo.png" alt="HEALTIVA" class="h-20 w-auto max-w-[320px] object-contain brightness-0 invert" />
 
                     <div class="flex-1 flex items-center">
                         <Transition name="panel-content" mode="out-in">
@@ -85,7 +85,7 @@
                         </Transition>
                     </div>
 
-                    <p class="text-white/40 text-xs">Â© 2026 Medix Â· Sistem Monitor Kesehatan</p>
+                    <p class="text-white/40 text-xs">Â© 2026 HEALTIVA Â· Sistem Monitor Kesehatan</p>
                 </div>
             </div>
         </div>
@@ -98,7 +98,7 @@
                 <div class="absolute -top-8 -right-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
                 <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-white/10 rounded-full blur-lg"></div>
                 <div class="relative z-10 px-5 pt-5 pb-4">
-                    <img src="/images/logo.png" alt="Medix" class="h-12 w-auto max-w-[240px] object-contain brightness-0 invert mb-3" />
+                    <img src="/images/logo.png" alt="HEALTIVA" class="h-12 w-auto max-w-[240px] object-contain brightness-0 invert mb-3" />
                     <!-- Tab pill -->
                     <div class="flex bg-white/20 backdrop-blur-sm rounded-2xl p-1 gap-1">
                         <Link href="/login"

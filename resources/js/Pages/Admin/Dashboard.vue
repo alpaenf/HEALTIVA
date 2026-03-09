@@ -4,7 +4,7 @@
 
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Dashboard Admin</h1>
-            <p class="text-sm text-gray-500">Ringkasan sistem Medix</p>
+            <p class="text-sm text-gray-500">Ringkasan sistem HEALTIVA</p>
         </div>
 
         <!-- Stats Grid -->
