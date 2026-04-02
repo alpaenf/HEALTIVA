@@ -13,14 +13,6 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <button v-if="canInstall && !installDone" @click="handleInstall"
-                        :disabled="isInstalling"
-                        class="text-xs sm:text-sm font-semibold border border-primary/20 text-primary bg-white px-3 sm:px-5 py-2 rounded-full transition-all duration-300 hover:bg-primary/5 disabled:opacity-60 min-w-[88px] sm:min-w-[112px] leading-tight">
-                        <span class="block sm:inline">{{ isInstalling ? 'Proses' : 'Install' }}</span>
-                    </button>
-                    <span v-else-if="installDone" class="text-xs font-semibold bg-green-50 text-green-700 px-4 py-2 rounded-full border border-green-100">
-                        Aplikasi Terpasang
-                    </span>
                     <a href="/login"
                         class="text-sm font-semibold bg-gradient-to-r from-primary to-primary-dark text-white px-6 py-2 rounded-full transition-all duration-300 shadow-md shadow-primary/30 hover:shadow-primary/50 hover:shadow-lg hover:-translate-y-0.5 hover:scale-105 active:translate-y-0 active:scale-95">
                         Masuk 
@@ -475,45 +467,12 @@
 import { h, ref, onMounted, onUnmounted } from 'vue';
 
 const navScrolled = ref(false);
-const deferredPrompt = ref(null);
-const canInstall = ref(false);
-const isInstalling = ref(false);
-const installDone = ref(false);
 
 const typewriterText = ref('');
 const fullText = "Pantau tekanan darah, gula darah, IMT, dan kondisi vital lainnya setiap hari.\nDapatkan analisis cerdas berbasis AI untuk menjaga kesehatan optimal.";
 let typewriterTimer = null;
 
-const handleInstall = async () => {
-    if (!deferredPrompt.value) return;
-    isInstalling.value = true;
-    deferredPrompt.value.prompt();
-    const { outcome } = await deferredPrompt.value.userChoice;
-    if (outcome === 'accepted') {
-        canInstall.value = false;
-    }
-    deferredPrompt.value = null;
-    isInstalling.value = false;
-};
-
-const onBeforeInstallPrompt = (event) => {
-    event.preventDefault();
-    deferredPrompt.value = event;
-    canInstall.value = true;
-};
-
-const onAppInstalled = () => {
-    installDone.value = true;
-    canInstall.value = false;
-    deferredPrompt.value = null;
-};
-
 onMounted(() => {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    installDone.value = isStandalone;
-    window.addEventListener('beforeinstallprompt', onBeforeInstallPrompt);
-    window.addEventListener('appinstalled', onAppInstalled);
-
     let i = 0;
     let isDeleting = false;
 
@@ -556,11 +515,6 @@ onMounted(() => {
     );
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-});
-
-onUnmounted(() => {
-    window.removeEventListener('beforeinstallprompt', onBeforeInstallPrompt);
-    window.removeEventListener('appinstalled', onAppInstalled);
 });
 
 // SVG icon components inline

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'healtiva-static-v2';
+const CACHE_NAME = 'healtiva-static-v3';
 const PRECACHE_URLS = ['/', '/manifest.webmanifest', '/images/logo.png'];
 
 self.addEventListener('install', (event) => {
@@ -28,7 +28,22 @@ self.addEventListener('fetch', (event) => {
 
     // For navigation requests, prefer fresh network response.
     if (event.request.mode === 'navigate') {
-        event.respondWith(fetch(event.request).catch(() => caches.match('/')));
+        event.respondWith(
+            fetch(event.request).catch(async () => {
+                const cachedPage = await caches.match(event.request);
+                if (cachedPage) return cachedPage;
+
+                // Only fallback to landing for actual landing request.
+                if (url.pathname === '/') {
+                    return (await caches.match('/')) || Response.error();
+                }
+
+                return new Response('Halaman tidak dapat diakses saat offline.', {
+                    status: 503,
+                    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+                });
+            })
+        );
         return;
     }
 
