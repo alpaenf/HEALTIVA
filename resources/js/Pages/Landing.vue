@@ -153,7 +153,7 @@
                         <span class="text-xs font-bold text-primary uppercase tracking-widest">Kecerdasan Buatan</span>
                         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mt-2 mb-4">Analisis Kesehatan<br>yang Lebih Cerdas</h2>
                         <p class="text-gray-500 text-sm leading-relaxed mb-6">
-                            Engine AI HEALTIVA membantu kader membaca data kesehatan warga secara menyeluruh, mulai dari tekanan darah, gula darah, IMT, hingga tren dari riwayat pemeriksaan, lalu menyajikannya dalam laporan yang jelas.
+                            Engine AI HEALTIVA membantu kader membaca data kesehatan warga secara menyeluruh, mulai dari tekanan darah, gula darah, BMI, hingga tren dari riwayat pemeriksaan, lalu menyajikannya dalam laporan yang jelas.
                         </p>
                         <ul class="space-y-3">
                             <li v-for="(p, i) in aiPoints" :key="i" class="flex items-start gap-3">
@@ -284,7 +284,7 @@
                         </div>
                         <h3 class="text-lg font-bold text-gray-800 mb-2">Input Pemeriksaan</h3>
                         <p class="text-sm text-gray-500 leading-relaxed max-w-[200px] mx-auto">
-                            Masukkan data vital pasien seperti tekanan darah, gula darah, IMT, dan metrik penting lain.
+                            Masukkan data vital pasien seperti tekanan darah, gula darah, BMI, dan metrik penting lain.
                         </p>
                     </div>
 
@@ -469,7 +469,7 @@ import { h, ref, onMounted, onUnmounted } from 'vue';
 const navScrolled = ref(false);
 
 const typewriterText = ref('');
-const fullText = "Pantau tekanan darah, gula darah, IMT, dan kondisi vital lainnya setiap hari.\nDapatkan analisis cerdas berbasis AI untuk menjaga kesehatan optimal.";
+const fullText = "Pantau tekanan darah, gula darah, BMI, dan kondisi vital lainnya setiap hari.\nDapatkan analisis cerdas berbasis AI untuk menjaga kesehatan optimal.";
 let typewriterTimer = null;
 
 onMounted(() => {
@@ -538,14 +538,14 @@ const features = [
     { title: 'Analisis AI', desc: 'Engine AI menganalisis data Anda dan memberikan laporan kondisi kesehatan yang mudah dipahami.', bg: 'bg-[#FCA5A5]', color: 'text-[#B92521]', icon: BrainIcon },
     { title: 'Chat AI Kesehatan', desc: 'Tanya langsung ke AI seputar kondisi kesehatan Anda. Jawaban berbasis pedoman Kemenkes RI.', bg: 'bg-primary/10', color: 'text-primary', icon: ChatIcon },
     { title: 'Edukasi Kesehatan', desc: 'Video edukasi dari Kemenkes, WHO, PERKENI, dan sumber medis terpercaya lainnya.', bg: 'bg-[#FECACA]', color: 'text-[#B92521]', icon: BookIcon },
-    { title: 'Standar Normal Pemeriksaan', desc: 'Referensi nilai normal tekanan darah, gula darah, IMT, SpO2, dan parameter lainnya berbasis WHO.', bg: 'bg-[#FCA5A5]', color: 'text-[#B92521]', icon: ClipIcon },
+    { title: 'Standar Normal Pemeriksaan', desc: 'Referensi nilai normal tekanan darah, gula darah, BMI, SpO2, dan parameter lainnya berbasis WHO.', bg: 'bg-[#FCA5A5]', color: 'text-[#B92521]', icon: ClipIcon },
     { title: 'Privasi Terjaga', desc: 'Data kesehatan Anda bersifat pribadi dan hanya dapat diakses oleh Anda sendiri.', bg: 'bg-primary/10', color: 'text-primary', icon: ShieldIcon },
     { title: 'Unduh PDF & Bagikan WA', desc: 'Ekspor laporan analisis AI ke PDF atau kirim langsung ke WhatsApp untuk konsultasi dokter.', bg: 'bg-[#FECACA]', color: 'text-[#B92521]', icon: PhoneIcon },
     { title: 'Akses Kapan Saja', desc: 'Tersedia di semua perangkat — smartphone, tablet, maupun komputer.', bg: 'bg-[#FCA5A5]', color: 'text-[#B92521]', icon: BellIcon },
 ];
 
 const aiPoints = [
-    'Analisis tekanan darah, gula darah, dan IMT secara bersamaan',
+    'Analisis tekanan darah, gula darah, dan BMI secara bersamaan',
     'Deteksi risiko berdasarkan data terkini dan tren historis',
     'Rekomendasi gaya hidup yang dipersonalisasi',
     'Laporan mudah dipahami tanpa istilah medis yang rumit',
@@ -568,7 +568,7 @@ const metrics = [
     { name: 'Gula Darah', unit: 'mg/dL', icon: DropIcon },
     { name: 'Detak Jantung', unit: 'BPM', icon: HeartIcon },
     { name: 'Suhu Tubuh', unit: '°C', icon: ThermIcon },
-    { name: 'IMT & Berat Badan', unit: 'kg / m²', icon: ScaleIcon },
+    { name: 'BMI & Berat Badan', unit: 'kg / m²', icon: ScaleIcon },
     { name: 'Saturasi Oksigen', unit: 'SpO2 (%)', icon: ChartIcon },
 ];
 

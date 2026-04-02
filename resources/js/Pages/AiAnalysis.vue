@@ -403,8 +403,9 @@ const shareWhatsApp = (analysis) => {
         .replace(/\*\*(.+?)\*\*/g, '*$1*')
         .replace(/\*(.+?)\*/g, '_$1_')
         .replace(/#{1,3}\s/g, '');
-    const shareLink = analysis.share_url ? `\n\nLink PDF laporan:\n${analysis.share_url}` : '';
-    const msg = `*Laporan Analisis Kesehatan HEALTIVA*\n${date}\n\n${plain.trim()}${shareLink}\n\n_Dihasilkan oleh HEALTIVA Health Monitor. Bukan pengganti konsultasi dokter._`;
+    const preview = plain.trim().length > 1200 ? `${plain.trim().slice(0, 1200)}...` : plain.trim();
+    const shareLink = analysis.share_url ? `Link PDF laporan:\n${analysis.share_url}\n\n` : '';
+    const msg = `*Laporan Analisis Kesehatan HEALTIVA*\n${date}\n\n${shareLink}${preview}\n\n_Dihasilkan oleh HEALTIVA Health Monitor. Bukan pengganti konsultasi dokter._`;
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 };
 
