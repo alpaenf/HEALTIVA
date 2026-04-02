@@ -185,23 +185,28 @@ class GeminiService
             }
         }
 
-        // â”€â”€ 4. IMT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── 4. IMT ──────────────────────────────────────────────────
         if (!empty($latest['weight']) && !empty($latest['height'])) {
             $bmi = round($latest['weight'] / pow($latest['height'] / 100, 2), 1);
             if ($bmi < 18.5) {
-                $fragments[] = "- **IMT ({$bmi}):** Kekurangan berat badan (Underweight).";
+                $fragments[] = "- **IMT ({$bmi}):** Berat badan kurang (Underweight).";
                 $recs[]      = "Tingkatkan asupan kalori berkualitas: protein hewani (telur, ayam, ikan) dan lemak baik (alpukat, kacang). Target kenaikan 0.5 kg/minggu.";
                 $riskScore  += 1;
             } elseif ($bmi <= 22.9) {
-                $fragments[] = "- **IMT ({$bmi}):** Ideal (Normal WHO Asia-Pacific).";
-            } elseif ($bmi <= 27.4) {
-                $fragments[] = "- **IMT ({$bmi}):** Kelebihan berat badan (Overweight). Perlu perhatian.";
-                $recs[]      = "Terapkan defisit kalori sedang (250-500 kkal/hari). Prioritaskan protein agar tidak mudah lapar.";
+                $fragments[] = "- **IMT ({$bmi}):** Berat badan normal.";
+            } elseif ($bmi <= 24.9) {
+                $fragments[] = "- **IMT ({$bmi}):** Beresiko menjadi obes (Kelebihan berat badan). Perlu mulai mengontrol asupan kalori.";
+                $recs[]      = "Terapkan manajemen kalori. Kurangi porsi makan berlebih dan mulai rutinitas olahraga secara teratur.";
                 $riskScore  += 1;
                 $combinedRisks[] = 'overweight';
+            } elseif ($bmi <= 29.9) {
+                $fragments[] = "- **IMT ({$bmi}):** Obes I. Meningkatkan risiko jantung, diabetes, dan masalah sendi secara progresif.";
+                $recs[]      = "Terapkan defisit kalori sedang secara konsisten. Tambahkan porsi serat dan protein agar tidak mudah lapar.";
+                $riskScore  += 2;
+                $combinedRisks[] = 'obesitas';
             } else {
-                $fragments[] = "- **IMT ({$bmi}):** Obesitas. Meningkatkan risiko jantung, diabetes, dan sendi.";
-                $recs[]      = "Konsultasikan program penurunan berat badan ke dokter atau ahli gizi. Mulai dari olahraga low-impact (jalan kaki, renang) dan porsi makan terstruktur.";
+                $fragments[] = "- **IMT ({$bmi}):** Obes II. Sangat berisiko memicu penyakit komplikasi serius.";
+                $recs[]      = "Konsultasikan program penurunan berat badan ke dokter atau ahli gizi. Prioritaskan makanan sehat dan olahraga low-impact.";
                 $riskScore  += 3;
                 $combinedRisks[] = 'obesitas';
             }

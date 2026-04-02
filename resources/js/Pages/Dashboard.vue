@@ -265,18 +265,21 @@ const bmi = computed(() => {
 const bmiLabel = computed(() => {
     const b = parseFloat(bmi.value);
     if (!b) return '';
-    if (b < 18.5) return 'Kurus';
-    if (b < 23) return 'Normal';
-    if (b < 25) return 'Gemuk';
-    return 'Obesitas';
+    if (b >= 30.0) return 'Obes II';
+    if (b >= 25.0) return 'Obes I';
+    if (b >= 23.0) return 'Beresiko menjadi obes';
+    if (b >= 18.5) return 'Berat badan normal';
+    return 'Berat badan kurang';
 });
 
 const bmiStatus = computed(() => {
     const b = parseFloat(bmi.value);
     if (!b) return 'info';
-    if (b >= 18.5 && b < 23) return 'good';
-    if (b >= 23 && b < 25) return 'warn';
-    return 'danger';
+    if (b >= 30.0) return 'critical';
+    if (b >= 25.0) return 'danger';
+    if (b >= 23.0) return 'warn';
+    if (b >= 18.5) return 'good';
+    return 'warn';
 });
 
 const bpStatus = computed(() => {
