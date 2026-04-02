@@ -109,8 +109,13 @@ class AuthController extends Controller
 
             // ── Tamu / Pasien flow ──────────────────────────────────────
             if ($flow === 'tamu') {
+                // Regenerate session ID so a fresh session is committed to DB
+                // and the Set-Cookie header is included in the redirect response.
+                // (stateless OAuth does not carry session across the Google roundtrip)
+                $request->session()->regenerate();
                 $request->session()->put('tamu_google_verified', true);
                 $request->session()->put('tamu_google_name', $googleUser->getName());
+                $request->session()->save(); // force-write before redirect
                 return redirect()->route('patient.lookup');
             }
 
