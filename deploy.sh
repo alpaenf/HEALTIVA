@@ -35,8 +35,13 @@ if command -v npm >/dev/null 2>&1; then
         exit 1
     fi
 else
-    echo "❌ npm tidak ditemukan di server. Install Node.js/npm atau build di pipeline CI."
-    exit 1
+    if [ -f "public/build/manifest.json" ]; then
+        echo "⚠️  npm tidak ditemukan. Lewati build server dan gunakan aset public/build yang sudah ada dari git."
+    else
+        echo "❌ npm tidak ditemukan dan public/build/manifest.json tidak ada."
+        echo "   Solusi: build di lokal/CI lalu commit folder public/build."
+        exit 1
+    fi
 fi
 
 # 1.5 Check .env configuration
