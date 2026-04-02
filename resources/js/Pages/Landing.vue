@@ -15,8 +15,8 @@
                 <div class="flex items-center gap-2">
                     <button v-if="canInstall && !installDone" @click="handleInstall"
                         :disabled="isInstalling"
-                        class="text-sm font-semibold border border-primary/20 text-primary bg-white px-5 py-2 rounded-full transition-all duration-300 hover:bg-primary/5 disabled:opacity-60">
-                        {{ isInstalling ? 'Memproses...' : 'Install App' }}
+                        class="text-xs sm:text-sm font-semibold border border-primary/20 text-primary bg-white px-3 sm:px-5 py-2 rounded-full transition-all duration-300 hover:bg-primary/5 disabled:opacity-60 min-w-[88px] sm:min-w-[112px] leading-tight">
+                        <span class="block sm:inline">{{ isInstalling ? 'Proses' : 'Install' }}</span>
                     </button>
                     <span v-else-if="installDone" class="text-xs font-semibold bg-green-50 text-green-700 px-4 py-2 rounded-full border border-green-100">
                         Aplikasi Terpasang

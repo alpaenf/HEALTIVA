@@ -63,6 +63,10 @@ Route::get('/share/analysis/{aiAnalysis}', [AiAnalysisController::class, 'shared
     ->middleware('signed')
     ->name('analysis.share');
 
+// Short share URL for WhatsApp (token cached server-side)
+Route::get('/s/{token}', [AiAnalysisController::class, 'sharedReportByToken'])
+    ->name('analysis.share.short');
+
 // ─────────────────────────────────────────────────────────────
 // Shared info routes (patient session OR kader/admin — no guard needed)
 // ─────────────────────────────────────────────────────────────

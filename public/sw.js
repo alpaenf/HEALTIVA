@@ -1,4 +1,4 @@
-const CACHE_NAME = 'healtiva-static-v1';
+const CACHE_NAME = 'healtiva-static-v2';
 const PRECACHE_URLS = ['/', '/manifest.webmanifest', '/images/logo.png'];
 
 self.addEventListener('install', (event) => {
@@ -17,6 +17,20 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
     if (event.request.method !== 'GET') return;
+
+    const url = new URL(event.request.url);
+
+    // Never rewrite shared report links. They must be fetched from network as-is.
+    if (url.pathname.startsWith('/share/') || url.pathname.startsWith('/s/')) {
+        event.respondWith(fetch(event.request));
+        return;
+    }
+
+    // For navigation requests, prefer fresh network response.
+    if (event.request.mode === 'navigate') {
+        event.respondWith(fetch(event.request).catch(() => caches.match('/')));
+        return;
+    }
 
     event.respondWith(
         caches.match(event.request).then((cached) => {

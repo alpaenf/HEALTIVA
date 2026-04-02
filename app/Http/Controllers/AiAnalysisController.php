@@ -8,7 +8,6 @@ use App\Services\GeminiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 
 class AiAnalysisController extends Controller
@@ -19,11 +18,7 @@ class AiAnalysisController extends Controller
     {
         $patient  = Patient::findOrFail(session('patient_id'));
         $analyses = $patient->aiAnalyses()->latest()->take(5)->get()->map(function ($analysis) {
-            $analysis->share_url = URL::temporarySignedRoute(
-                'analysis.share',
-                now()->addDays(30),
-                ['aiAnalysis' => $analysis->id]
-            );
+            $analysis->share_url = $analysis->makeShareUrl(30);
             return $analysis;
         });
         $latestAnalysis = $analyses->first();
@@ -158,6 +153,21 @@ class AiAnalysisController extends Controller
     }
 
     public function sharedReport(AiAnalysis $aiAnalysis)
+    {
+        return $this->renderSharedReport($aiAnalysis);
+    }
+
+    public function sharedReportByToken(string $token)
+    {
+        $analysis = AiAnalysis::findByShareToken($token);
+        if (!$analysis) {
+            abort(404);
+        }
+
+        return $this->renderSharedReport($analysis);
+    }
+
+    private function renderSharedReport(AiAnalysis $aiAnalysis)
     {
         $patient = $aiAnalysis->patient;
 

@@ -10,7 +10,6 @@ use App\Services\GeminiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 
 class KaderPatientController extends Controller
@@ -62,11 +61,7 @@ class KaderPatientController extends Controller
             ->first();
 
         $analyses = $patient->aiAnalyses()->latest()->take(5)->get()->map(function ($analysis) {
-            $analysis->share_url = URL::temporarySignedRoute(
-                'analysis.share',
-                now()->addDays(30),
-                ['aiAnalysis' => $analysis->id]
-            );
+            $analysis->share_url = $analysis->makeShareUrl(30);
             return $analysis;
         });
 
