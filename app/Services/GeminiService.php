@@ -102,23 +102,41 @@ class GeminiService
                 else                 $trend = " (stabil)";
             }
 
-            if ($sys < 120 && $dia < 80) {
-                $fragments[] = "- **Tekanan Darah ({$sys}/{$dia} mmHg){$trend}:** Optimal dan normal.";
-                $recs[]      = "Pertahankan pola makan rendah garam dan aktif bergerak minimal 30 menit sehari.";
-            } elseif ($sys < 130 && $dia < 80) {
-                $fragments[] = "- **Tekanan Darah ({$sys}/{$dia} mmHg){$trend}:** Sedikit meningkat (Elevated). Belum hipertensi, namun perlu dipantau.";
-                $recs[]      = "Kurangi kafein, batasi garam maksimal 1 sendok teh per hari, dan hindari stres berkepanjangan.";
-                $riskScore  += 1;
-            } elseif ($sys < 140 && $dia < 90) {
-                $fragments[] = "- **Tekanan Darah ({$sys}/{$dia} mmHg){$trend}:** Hipertensi Tahap 1. Perlu penanganan lebih serius.";
-                $recs[]      = "Terapkan diet DASH (buah, sayur, rendah lemak jenuh). Olahraga kardio ringan 5x/minggu, dan pertimbangkan konsultasi dokter.";
-                $riskScore  += 2;
+            $cat = '';
+            if ($sys >= 180 || $dia >= 110) {
+                $cat = 'Hipertensi Derajat 3';
+                $riskScore += 4;
                 $combinedRisks[] = 'hipertensi';
+            } elseif ($sys >= 160 || $dia >= 100) {
+                $cat = 'Hipertensi Derajat 2';
+                $riskScore += 3;
+                $combinedRisks[] = 'hipertensi';
+            } elseif ($sys >= 140 && $dia < 90) {
+                $cat = 'Hipertensi Sistolik';
+                $riskScore += 2;
+                $combinedRisks[] = 'hipertensi';
+            } elseif ($sys >= 140 || $dia >= 90) {
+                $cat = 'Hipertensi Derajat 1';
+                $riskScore += 2;
+                $combinedRisks[] = 'hipertensi';
+            } elseif ($sys >= 130 || $dia >= 85) {
+                $cat = 'Normal-tinggi';
+                $riskScore += 1;
+            } elseif ($sys >= 120 || $dia >= 80) {
+                $cat = 'Normal';
             } else {
-                $fragments[] = "- **Tekanan Darah ({$sys}/{$dia} mmHg){$trend}:** Hipertensi Tahap 2 atau lebih. Berisiko tinggi.";
-                $recs[]      = "Segera konsultasi ke dokter untuk evaluasi obat antihipertensi. Hindari garam, rokok, dan alkohol.";
-                $riskScore  += 4;
-                $combinedRisks[] = 'hipertensi';
+                $cat = 'Optimal';
+            }
+
+            if (str_contains($cat, 'Hipertensi')) {
+                $fragments[] = "- **Tekanan Darah ({$sys}/{$dia} mmHg){$trend}:** $cat. Berisiko tinggi.";
+                $recs[]      = "Segera konsultasi ke dokter untuk penanganan medis. Kurangi asupan garam harian maksimal 1 sendok teh, dan hindari stres.";
+            } elseif ($cat === 'Normal-tinggi') {
+                $fragments[] = "- **Tekanan Darah ({$sys}/{$dia} mmHg){$trend}:** $cat. Belum hipertensi, namun harus sangat waspada.";
+                $recs[]      = "Kurangi asupan garam, batasi kafein, dan rutin olahraga ringan 30 menit sehari.";
+            } else {
+                $fragments[] = "- **Tekanan Darah ({$sys}/{$dia} mmHg){$trend}:** $cat.";
+                $recs[]      = "Pertahankan pola hidup sehat bebas rokok, rendah garam, dan aktif bergerak setiap hari.";
             }
         }
 

@@ -283,18 +283,21 @@ const bpStatus = computed(() => {
     const s = props.latestRecord?.systolic, d = props.latestRecord?.diastolic;
     if (!s) return 'info';
     if (s >= 140 || d >= 90) return 'danger';
-    if (s >= 130 || d >= 80) return 'warn';
-    if (s < 90 || d < 60) return 'info';
+    if (s >= 130 || d >= 85) return 'warn';
+    if (s >= 120 || d >= 80) return 'good';
     return 'good';
 });
 
 const bpLabel = computed(() => {
     const s = props.latestRecord?.systolic, d = props.latestRecord?.diastolic;
     if (!s) return '';
-    if (s >= 140 || d >= 90) return 'Tinggi (Hipertensi)';
-    if (s >= 130 || d >= 80) return 'Sedikit Tinggi';
-    if (s < 90 || d < 60) return 'Rendah (Hipotensi)';
-    return 'Normal';
+    if (s >= 180 || d >= 110) return 'Hipertensi Derajat 3';
+    if (s >= 160 || d >= 100) return 'Hipertensi Derajat 2';
+    if (s >= 140 && d < 90) return 'Hipertensi Sistolik';
+    if (s >= 140 || d >= 90) return 'Hipertensi Derajat 1';
+    if (s >= 130 || d >= 85) return 'Normal-tinggi';
+    if (s >= 120 || d >= 80) return 'Normal';
+    return 'Optimal';
 });
 
 const hrLabel = computed(() => {

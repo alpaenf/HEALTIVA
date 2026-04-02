@@ -154,14 +154,16 @@ const statusLabel = (s) => ({
 const standards = [
     {
         id: 'bp', title: 'Tekanan Darah', subtitle: 'Nilai sistolik & diastolik (mmHg)',
-        source: 'Kemenkes RI 2023', bgFrom: '#FFF5F5', bgTo: '#FEF2F2', iconBg: '#FDD3CF',
+        source: 'ESH/ESC/Kemenkes 2018', bgFrom: '#FFF5F5', bgTo: '#FEF2F2', iconBg: '#FDD3CF',
         note: 'Pengukuran sebaiknya dilakukan 2x dengan jeda 5 menit saat istirahat.',
         rows: [
-            { label: 'Normal',           value: '< 120 / < 80 mmHg',    status: 'normal'  },
-            { label: 'Elevated',         value: '120-129 / < 80 mmHg',  status: 'warning' },
-            { label: 'Hipertensi Tkt. 1',value: '130-139 / 80-89 mmHg', status: 'danger'  },
-            { label: 'Hipertensi Tkt. 2',value: '>= 140 / >= 90 mmHg',   status: 'danger'  },
-            { label: 'Krisis Hipertensi',value: '> 180 / > 120 mmHg',   status: 'critical'},
+            { label: 'Optimal',              value: '< 120 / < 80',            status: 'normal'  },
+            { label: 'Normal',               value: '120-129 dan/atau 80-84',  status: 'normal'  },
+            { label: 'Normal-tinggi',        value: '130-139 dan/atau 85-89',  status: 'warning' },
+            { label: 'Hipertensi Derajat 1', value: '140-159 dan/atau 90-99',  status: 'danger'  },
+            { label: 'Hipertensi Derajat 2', value: '160-179 dan/atau 100-109',status: 'danger'  },
+            { label: 'Hipertensi Derajat 3', value: '>= 180 dan/atau >= 110',  status: 'critical'},
+            { label: 'Hipertensi Sistolik',  value: '>= 140 dan < 90',         status: 'danger'  },
         ],
     },
     {
