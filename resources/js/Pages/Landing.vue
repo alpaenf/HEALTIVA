@@ -30,7 +30,7 @@
         </div>
 
         <!-- â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-        <section class="relative flex flex-col items-center overflow-hidden bg-gradient-to-br from-primary via-primary to-primary-dark pt-28 pb-0 min-h-screen">
+        <section class="relative flex flex-col items-center overflow-hidden bg-gradient-to-br from-primary via-primary to-primary-dark pt-40 pb-0 min-h-screen">
             <!-- Blobs -->
             <div class="absolute -top-32 -right-32 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl animate-blob"></div>
             <div class="absolute bottom-0 -left-24 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-blob" style="animation-delay:3s"></div>
