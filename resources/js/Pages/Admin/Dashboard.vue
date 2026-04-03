@@ -9,10 +9,10 @@
 
         <!-- Stats Grid -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-            <StatCard :value="stats.totalPatients" label="Total Pasien" color="blue" class="animate-fade-in-up delay-75" />
-            <StatCard :value="stats.totalKaders" label="Total Kader" color="green" class="animate-fade-in-up delay-150" />
-            <StatCard :value="stats.totalRecords" label="Total Data" color="purple" class="animate-fade-in-up delay-200" />
-            <StatCard :value="stats.newPatientsThisMonth" label="Pasien Baru (Bulan Ini)" color="orange" class="animate-fade-in-up delay-300" />
+            <StatCard :value="stats.totalPatients" label="Total Pasien" subtitle="Semua pasien terdaftar" color="blue" class="animate-fade-in-up delay-75" />
+            <StatCard :value="stats.totalKaders" label="Total Kader" subtitle="Tenaga kesehatan aktif" color="green" class="animate-fade-in-up delay-150" />
+            <StatCard :value="stats.totalRecords" label="Rekam Medis" subtitle="Total input data kesehatan" color="purple" class="animate-fade-in-up delay-200" />
+            <StatCard :value="stats.newPatientsThisMonth" label="Pasien Baru" subtitle="Terdaftar bulan ini" color="orange" class="animate-fade-in-up delay-300" />
         </div>
 
         <!-- Risk Summary Card -->
@@ -234,7 +234,7 @@ const barChartOptions = {
 const formatDate = (d) => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
 
 const StatCard = {
-    props: ['value', 'label', 'color'],
+    props: ['value', 'label', 'subtitle', 'color'],
     setup(props) {
         const colorMap = {
             blue:   'from-primary/70 to-primary',
@@ -243,10 +243,15 @@ const StatCard = {
             orange: 'from-primary/60 to-primary/90',
             red:    'from-primary to-primary-dark',
         };
-        return () => h('div', { class: 'bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover-lift' }, [
+        return () => h('div', { class: 'bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover-lift flex flex-col justify-between' }, [
             h('div', { class: `w-3 h-3 bg-gradient-to-br ${colorMap[props.color] ?? colorMap.red} rounded-full mb-3` }),
-            h('p', { class: 'text-2xl font-bold text-gray-800' }, props.value),
-            h('p', { class: 'text-xs text-gray-500 mt-0.5' }, props.label),
+            h('div', {}, [
+                h('p', { class: 'text-2xl font-bold text-gray-800 leading-tight' }, props.value),
+                h('p', { class: 'text-sm font-semibold text-gray-700 mt-1' }, props.label),
+                props.subtitle
+                    ? h('p', { class: 'text-[11px] text-gray-400 mt-0.5 leading-snug' }, props.subtitle)
+                    : null,
+            ]),
         ]);
     }
 };
