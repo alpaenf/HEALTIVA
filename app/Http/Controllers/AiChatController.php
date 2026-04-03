@@ -206,6 +206,23 @@ class AiChatController extends Controller
             return "Ohh, oke oke. Nggak masalah kok. Ada yang mau kamu ceritain atau tanyain lagi ke aku nggak, $name?";
         }
 
+        // ── KNOWLEDGE BASE LOOKUP ─────────────────────────────────────────────
+        // Cek KB terlebih dahulu. Kalau ada yang relevan, kembalikan langsung
+        // tanpa harus cocokkan dengan pola hardcoded di bawah.
+        // KB ini bisa diisi Admin kapan saja — semakin banyak isinya,
+        // semakin pintar otak cadangan menjawab topik baru.
+        try {
+            $kbResults = \App\Models\AiKnowledge::findRelevant($lastMsg, 2);
+            if ($kbResults->isNotEmpty()) {
+                $top = $kbResults->first();
+                $extra = $kbResults->count() > 1 ? "\n\n" . $kbResults->get(1)->content : '';
+                return "Berdasarkan basis pengetahuan HEALTIVA untuk **{$top->title}**:\n\n{$top->content}{$extra}\n\nApakah kamu mau aku carikan video edukasi terkait hal ini?";
+            }
+        } catch (\Throwable $e) {
+            // KB tidak tersedia, lanjut ke rules biasa
+        }
+        // ─────────────────────────────────────────────────────────────────────
+
         if (preg_match('/(tekanan darah|hipertensi|sistolik|diastolik|tensi|blood pressure)/', $t)) {
             return "Tekanan darah normal itu **di bawah 120/80 mmHg**{$d_bp}.\n\nKlasifikasi Kemenkes RI:\n- **Normal:** <120/<80\n- **Elevated (Meningkat):** 120-129/<80\n- **Hipertensi Tahap 1:** 130-139/80-89\n- **Hipertensi Tahap 2:** >=140/>=90\n- **Krisis:** >180/>120\n\nCara menurunkannya: kurangi garam (<5g/hari atau cukup 1 sendok teh), olahraga aerobik ringan 30 menit 5x/minggu, dan hindari stres. Kalau konsisten di atas 140/90, mending minum obat resep dokter ya.\n\nApakah kamu mau aku carikan video edukasi terkait hal ini?";
         }
