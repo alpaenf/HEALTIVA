@@ -173,8 +173,10 @@ const showMore  = ref(false);
 const collapsed = ref(false);
 
 const logout = () => {
-    showMore.value = false;
-    router.post('/keluar');
+    if (confirm('Apakah Anda yakin ingin mengakhiri sesi kesehatan ini?')) {
+        showMore.value = false;
+        router.post('/keluar');
+    }
 };
 
 const isActive = (href) => {

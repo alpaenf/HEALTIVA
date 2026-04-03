@@ -297,7 +297,11 @@ const isActive = (href) => {
     return p === href || p.startsWith(href + '/');
 };
 
-const logout = () => router.post('/logout');
+const logout = () => {
+    if (confirm('Apakah Anda yakin ingin keluar dari aplikasi?')) {
+        router.post('/logout');
+    }
+};
 
 const mobileNav = (name, href) => {
     if (isActive(href)) return;

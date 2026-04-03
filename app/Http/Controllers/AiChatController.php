@@ -198,8 +198,12 @@ class AiChatController extends Controller
         $d_spo2 = ($record && $record->oxygen_saturation) ? " *(SpO2 kamu: {$record->oxygen_saturation}%)*" : "";
         $d_temp = ($record && $record->temperature) ? " *(suhu kamu: {$record->temperature}°C)*" : "";
 
-        if (preg_match('/(^|\b)(ya|mau|boleh|tampilin|lihat|tampilkan|carikan|silakan|gas|oke|ayo|y)(\b|$)/i', trim($t)) || preg_match('/(ya|mau|boleh|tampilin|lihat|tampilkan|carikan|silakan).*video/i', $t)) {
-            return "Baik, ini dia video edukasi yang bisa kamu tonton. Semoga bermanfaat ya! [TAMPILKAN_VIDEO]";
+        if (preg_match('/(^|\b)(iy+a+|y+a+|yoi|yups|mau+|boleh|tampilin|lihat|tampilkan|carikan|silakan|gas+|oke+|ok|ayo+|y)(\b|$)/i', trim($t)) || preg_match('/(video)/i', $t)) {
+            return "Siapp! Ini dia video edukasi yang sekiranya cocok untuk kamu tonton. Semoga memberikan insight baru ya! [TAMPILKAN_VIDEO]";
+        }
+
+        if (preg_match('/(^|\b)(ngg+a+|gak+|engg+a+k+|tida+k+|no|ndak|jangan)(\b|$)/i', trim($t))) {
+            return "Ohh, oke oke. Nggak masalah kok. Ada yang mau kamu ceritain atau tanyain lagi ke aku nggak, $name?";
         }
 
         if (preg_match('/(tekanan darah|hipertensi|sistolik|diastolik|tensi|blood pressure)/', $t)) {
@@ -246,8 +250,16 @@ class AiChatController extends Controller
             return "Tenangkan pikiranmu dulu ya {$name}! Stres itu normal.\n\nCara redakan secara cepat (teknik 4-7-8):\n1. Tarik napas pelan 4 detik\n2. Tahan napasmu 7 detik\n3. Hembuskan dari mulut pelan 8 detik\nLakukan rutin. Ingat, kesehatan mentalku sepenting kesehatan fisik! Kurangi memikirkan omongan orang, fokus istirahat dan luangkan waktu untuk dirimu sendiri.\n\nMau saya carikan video teknik relaksasi?";
         }
 
-        if (preg_match('/(olahraga|latihan|gym|lari|aerobik|exercise)/', $t)) {
+        if (preg_match('/(olahraga|latihan|gym|lari|aerobik|exercise|workout)/', $t)) {
             return "Standar Kemenkes dan WHO:\nUsahakan berolahraga **150 menit per minggu**. Alias 30 menit sehari selama 5 hari saja.\n\nKalau kamu pemula, mulai saja dari sekedar jalan santai sore atau peregangan ringan di rumah pakai YouTube. Olahraga bisa melancarkan jantung, nurunin kolesterol, dan lepas endorfin agar gak gampang sedih/stres.\n\nApakah kamu mau rekomendasi video olahraga di rumah?";
+        }
+
+        if (preg_match('/(pusing|puyeng|sakit kepala|berkunang|migrain|vertigo)/', $t)) {
+            return "Sakit kepala/pusing bisa karena kecapekan, gerd yang naik, dehidrasi, atau tensi naik lho, {$name}.\n\nCoba minum segelas air hangat dulu, kurangi melihat layar HP, dan rilekskan otot leher. Kalau tak kunjung sembuh, meminum Paracetamol bisa membantu. Mau diputarkan video peregangan leher?";
+        }
+
+        if (preg_match('/(flu|pilek|batuk|bersin)/', $t)) {
+            return "Musim pancaroba sering bikin flu dan batuk nih.\n\nPerbanyak minum air hangat, perasan lemon+madu super efektif buat nyamankan tenggorokan. Kurangi minum es dan makan manis. Kalau batuknya berdahak gatal, minumlah obat batuk ekspektoran ya!\n\nMau cari video bahan alami atasi flu?";
         }
 
         if (preg_match('/(tidur|insomnia|susah tidur|sleep|ngantuk)/', $t)) {
@@ -303,8 +315,8 @@ class AiChatController extends Controller
             return "Aku denger kamu, {$name}. Perasaan seperti itu wajar dialami siapa saja. Tidak perlu merasa sendirian. Kalau mau cerita, aku di sini. Tapi kalau rasa sedih itu sudah sangat mengganggu aktivitas harian atau berlangsung lebih dari 2 minggu, ada baiknya bicara langsung ke psikolog ya.";
         }
 
-        if (preg_match('/(halo|hai|hi|hey|hei|pagi|siang|sore|malam|selamat)/', $t)) {
-            return "Hei {$name}! Ada yang bisa aku bantu hari ini? Mau tanya soal diet berat badan, tensi, asam urat, masalah lambung, atau curhat soal kesehatan juga boleh!";
+        if (preg_match('/(halo+|hai+|hi+|he+y|he+i|pagi|siang|sore|malam|selamat|oy)/', $t)) {
+            return "Hei {$name}! Ada yang bisa aku bantu hari ini? Mau curhat soal capek, stres kerjaan, atau tanya-tanya seputar tensi, gula, diet... Bebas aja, aku siap dengerin kok!";
         }
 
         if (preg_match('/(makasih|thanks|terima kasih|thx|tq)/', $t)) {
@@ -312,9 +324,10 @@ class AiChatController extends Controller
         }
         
         $randomFallback = [
-            "Hmm, pertanyaan yang menarik {$name}! Sayangnya untuk detail medis spesifik soal itu aku belum bisa memastikan. Boleh coba tanyakan topik lain seperti Tensi, Gula Darah, Kolesterol, Diet, atau Asam Urat?",
-            "Maaf {$name}, aku agak kurang menangkap maksud lengkapmu. Bisa coba tanyakan ulang dengan kata kunci spesifik seperti: penanganan maag, cara menurunkan kolesterol, pola diet, atau tensi normal?",
-            "Pertanyaan yang bagus! Tapi dr. HEALTIVA butuh spesifikasi lebih. Kamu bisa bertanya soal tekanan darah, obesitas/diet, masalah lambung, tanda penyakit jantung atau organ ginjal ya."
+            "Hmm, jujur aku butuh spesifikasi lebih nih {$name} biar jawabannya akurat. Boleh cerita lebih spesifik lagi? Misalnya soal tensimu, perut lambung, susah tidur, pusing, diet badan, atau hal lain?",
+            "Aku lagi mencerna kata-katamu nih, {$name}. Biar aku nggak salah kasih saran medis, kamu ngerasain gejalanya seperti apa persisnya? Kalau mau ngobrol seputar demam, darah tinggi, kolesterol atau stress juga gas aja!",
+            "Waduh, {$name}! Otakku lagi butuh kata kunci yang lebih pas hehe. Kamu lagi khawatir soal apa nih? Kesehatan organ, kecemasan pikiran, atau lagi lemes ngga enak badan aja?",
+            "Haha kadang aku agak lola (loading lama) kalau perintahnya belum terdeteksi. Boleh dibantu ulang dengan sebutin keluhan pusing, tensi, diet, maag, atau sekedar mau cari video senam?"
         ];
 
         return $randomFallback[array_rand($randomFallback)];

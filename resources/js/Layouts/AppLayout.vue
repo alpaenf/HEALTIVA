@@ -149,7 +149,11 @@ const currentDate = computed(() =>
     new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })
 );
 
-const logout = () => router.post('/keluar');
+const logout = () => {
+    if (confirm('Apakah Anda yakin ingin mengakhiri sesi kesehatan ini?')) {
+        router.post('/keluar');
+    }
+};
 
 const SidebarLink = {
     props: ['href', 'active'],
