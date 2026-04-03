@@ -84,27 +84,39 @@ class KaderPatientController extends Controller
         $excelFileName = 'Riwayat_Kesehatan_' . str_replace(' ', '_', $patient->name) . '_' . date('Ymd_His') . '.xlsx';
 
         $data = [
-            ['<b>REKAM MEDIS PASIEN</b>'],
+            ['<style font-size="16"><b>REKAM MEDIS PASIEN (PASPOR KESEHATAN MEDIX)</b></style>'],
+            ['<style font-size="11">Riwayat Pemeriksaan - Faskes Tingkat Pertama (Posyandu)</style>'],
+            [''],
+            ['<b>No. RM:</b>', 'RM-' . str_pad($patient->id, 5, '0', STR_PAD_LEFT)],
             ['<b>Nama Pasien:</b>', $patient->name],
-            ['<b>NIK:</b>', $patient->nik],
-            ['<b>Tanggal Lahir:</b>', $patient->date_of_birth?->format('d/m/Y') ?? '-'],
+            ['<b>NIK:</b>', "'" . $patient->nik],
+            ['<b>Tanggal Lahir:</b>', $patient->date_of_birth ? date('d/m/Y', strtotime($patient->date_of_birth)) : '-'],
             [''],
             [
-                '<b>Tanggal Pemeriksaan</b>', '<b>Sistolik (mmHg)</b>', '<b>Diastolik (mmHg)</b>', '<b>Detak Jantung (bpm)</b>', 
-                '<b>Gula Darah (mg/dL)</b>', '<b>Berat Badan (kg)</b>', '<b>Tinggi Badan (cm)</b>', 
-                '<b>Suhu Tubuh (°C)</b>', '<b>Saturasi Oksigen (%)</b>', '<b>Catatan Medis</b>'
+                '<style bgcolor="#DDEBF7"><b>Tgl Visite</b></style>', 
+                '<style bgcolor="#FCE4D6"><b>Tensi (S/D) mmHg</b></style>', 
+                '<style bgcolor="#FFF2CC"><b>Nadi (bpm)</b></style>', 
+                '<style bgcolor="#FFF2CC"><b>Gula Darah (mg/dL)</b></style>', 
+                '<style bgcolor="#E2EFDA"><b>BB (kg)</b></style>', 
+                '<style bgcolor="#E2EFDA"><b>TB (cm)</b></style>', 
+                '<style bgcolor="#E2EFDA"><b>IMT</b></style>', 
+                '<style bgcolor="#FFF2CC"><b>Suhu (°C)</b></style>', 
+                '<style bgcolor="#FFF2CC"><b>SpO2 (%)</b></style>', 
+                '<style bgcolor="#F2F2F2"><b>Catatan Klinis</b></style>'
             ]
         ];
 
         foreach ($records as $record) {
+            $tensi = ($record->systolic && $record->diastolic) ? $record->systolic . '/' . $record->diastolic : '-';
+            
             $data[] = [
                 $record->recorded_at ? $record->recorded_at->format('d/m/Y H:i') : '-',
-                $record->systolic ?? '-',
-                $record->diastolic ?? '-',
+                $tensi,
                 $record->heart_rate ?? '-',
                 $record->blood_sugar ?? '-',
                 $record->weight ?? '-',
                 $record->height ?? '-',
+                $record->bmi ? number_format($record->bmi, 1) : '-',
                 $record->temperature ?? '-',
                 $record->oxygen_saturation ?? '-',
                 $record->notes ?? '-'
@@ -137,44 +149,59 @@ class KaderPatientController extends Controller
         $excelFileName = 'Laporan_Semua_Pasien_Kader_' . now()->format('Ymd_His') . '.xlsx';
 
         $data = [
-            ['<b>LAPORAN DATA REKAM MEDIS (Semua Pasien)</b>'],
-            ['<b>FASILITAS KESEHATAN TINGKAT PERTAMA / POSYANDU</b>'],
-            ['<b>Tanggal Cetak:</b>', now()->format('d/m/Y H:i')],
+            ['<style font-size="16"><b>INSTALASI REKAM MEDIS & INFORMASI KESEHATAN (MEDIX)</b></style>'],
+            ['<style font-size="11">Faskes Tingkat Pertama (Posyandu) - Sistem Informasi Medis Digital</style>'],
+            ['<style font-size="11">Email: rekam.medis@medix.id | No. Dokumen: RM-XLS/' . date('Y/m/d') . '</style>'],
+            [''],
+            ['<style font-size="14"><b>LAPORAN DATA PASIEN & RINGKASAN KLINIS TERAKHIR (KADER)</b></style>'],
+            ['<b>Tanggal Cetak:</b>', now()->format('d/m/Y H:i:s')],
             [''],
             [
-                '<b>ID</b>', '<b>NIK</b>', '<b>Nama Pasien</b>', '<b>Gender</b>', '<b>Tanggal Lahir</b>', '<b>No HP</b>', 
-                '<b>Total Data</b>', '<b>Tanggal Terdaftar</b>',
-                '<b>Tgl Pemeriksaan Terakhir</b>',
-                '<b>Berat Badan (kg)</b>', '<b>Tinggi Badan (cm)</b>', '<b>IMT</b>', '<b>Kesimpulan IMT</b>',
-                '<b>Sistolik (mmHg)</b>', '<b>Diastolik (mmHg)</b>', '<b>Kesimpulan Tensi</b>',
-                '<b>Gula Darah (mg/dL)</b>',
-                '<b>Suhu Tubuh (°C)</b>', '<b>Detak Jantung (bpm)</b>',
-                '<b>Catatan Medis</b>'
+                '<style bgcolor="#E2EFDA"><b>No. RM</b></style>', 
+                '<style bgcolor="#E2EFDA"><b>NIK Pasien</b></style>', 
+                '<style bgcolor="#E2EFDA"><b>Nama Lengkap Pasien</b></style>', 
+                '<style bgcolor="#E2EFDA"><b>L/P</b></style>', 
+                '<style bgcolor="#E2EFDA"><b>Tanggal Lahir</b></style>', 
+                '<style bgcolor="#E2EFDA"><b>Kontak (HP)</b></style>', 
+                '<style bgcolor="#E2EFDA"><b>Tgl Registrasi</b></style>',
+                '<style bgcolor="#DDEBF7"><b>Tgl Visite Terakhir</b></style>',
+                '<style bgcolor="#DDEBF7"><b>BB (kg)</b></style>', 
+                '<style bgcolor="#DDEBF7"><b>TB (cm)</b></style>', 
+                '<style bgcolor="#DDEBF7"><b>IMT</b></style>', 
+                '<style bgcolor="#DDEBF7"><b>Kategori Status Gizi (IMT)</b></style>',
+                '<style bgcolor="#FCE4D6"><b>Tensi (S/D) mmHg</b></style>', 
+                '<style bgcolor="#FCE4D6"><b>Kategori Kardiovaskular</b></style>',
+                '<style bgcolor="#FFF2CC"><b>Gula Darah (mg/dL)</b></style>',
+                '<style bgcolor="#FFF2CC"><b>Suhu (°C)</b></style>', 
+                '<style bgcolor="#FFF2CC"><b>Nadi (bpm)</b></style>',
+                '<style bgcolor="#F2F2F2"><b>Catatan Medis (Assessment)</b></style>'
             ]
         ];
 
         foreach ($patients as $p) {
             $latestRecord = $p->healthRecords->first();
             
+            $tensi = ($latestRecord && $latestRecord->systolic && $latestRecord->diastolic) 
+                        ? $latestRecord->systolic . '/' . $latestRecord->diastolic 
+                        : '-';
+
             $data[] = [
-                $p->id,
-                $p->nik,
+                'RM-' . str_pad($p->id, 5, '0', STR_PAD_LEFT),
+                "'" . $p->nik,
                 $p->name,
-                $p->gender ?? '-',
-                $p->date_of_birth?->format('d/m/Y') ?? '-',
+                $p->gender === 'male' ? 'L' : ($p->gender === 'female' ? 'P' : '-'),
+                $p->date_of_birth ? date('d/m/Y', strtotime($p->date_of_birth)) : '-',
                 $p->phone ?? '-',
-                $p->health_records_count,
                 $p->created_at->format('d/m/Y'),
                 
                 // Detail Pemeriksaan Terakhir
-                $latestRecord ? ($latestRecord->recorded_at?->format('d/m/Y H:i') ?? '-') : 'Belum Ada Data',
+                $latestRecord && $latestRecord->recorded_at ? $latestRecord->recorded_at->format('d/m/Y H:i') : 'Belum Ada Visite',
                 $latestRecord->weight ?? '-',
                 $latestRecord->height ?? '-',
-                $latestRecord ? $latestRecord->bmi : '-',
-                $latestRecord ? $latestRecord->bmi_status : '-',
-                $latestRecord->systolic ?? '-',
-                $latestRecord->diastolic ?? '-',
-                $latestRecord ? $latestRecord->blood_pressure_status : '-',
+                $latestRecord && $latestRecord->bmi ? number_format($latestRecord->bmi, 1) : '-',
+                $latestRecord->bmi_status ?? '-',
+                $tensi,
+                $latestRecord->blood_pressure_status ?? '-',
                 $latestRecord->blood_sugar ?? '-',
                 $latestRecord->temperature ?? '-',
                 $latestRecord->heart_rate ?? '-',
