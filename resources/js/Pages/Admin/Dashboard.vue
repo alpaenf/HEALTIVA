@@ -22,9 +22,10 @@
                 <h3 class="font-semibold text-gray-700 text-sm">Ringkasan Risiko Pasien</h3>
                 <span class="ml-auto text-xs text-gray-400">dari {{ stats.analyzedPatients }} pasien tercatat</span>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+
                 <!-- Hipertensi -->
-                <div class="space-y-1.5">
+                <div class="space-y-2">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-medium text-gray-600">Hipertensi</span>
                         <span class="text-xs font-bold text-primary">{{ stats.countHighBp }}/{{ stats.analyzedPatients }} pasien</span>
@@ -33,10 +34,39 @@
                         <div class="h-full rounded-full bg-gradient-to-r from-primary to-primary-dark transition-all duration-700"
                             :style="`width:${stats.pctHighBp}%`"></div>
                     </div>
-                    <p class="text-[11px] text-gray-400">{{ stats.pctHighBp }}% dari total pasien</p>
+                    <div class="flex items-center justify-between">
+                        <p class="text-[11px] text-gray-400">{{ stats.pctHighBp }}% dari total pasien</p>
+                        <button v-if="stats.countHighBp > 0"
+                            @click="openPanel = openPanel === 'bp' ? null : 'bp'"
+                            class="text-[11px] text-primary hover:underline flex items-center gap-1 transition">
+                            {{ openPanel === 'bp' ? 'Sembunyikan' : 'Lihat daftar' }}
+                            <svg class="w-3 h-3 transition-transform" :class="openPanel === 'bp' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <Transition name="slide-fade">
+                        <div v-if="openPanel === 'bp'" class="rounded-xl border border-red-100 bg-red-50/50 overflow-hidden">
+                            <div v-for="p in stats.patientsHighBp" :key="p.id"
+                                class="flex items-center justify-between px-3 py-2 border-b border-red-100/50 last:border-0 hover:bg-red-50 transition">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-[10px]">
+                                        {{ p.name.charAt(0).toUpperCase() }}
+                                    </div>
+                                    <Link :href="`/admin/patients/${p.id}`" class="text-xs font-medium text-gray-700 hover:text-primary hover:underline truncate max-w-[100px]">
+                                        {{ p.name }}
+                                    </Link>
+                                </div>
+                                <span class="text-[11px] font-mono font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                                    {{ p.systolic }}/{{ p.diastolic }}
+                                </span>
+                            </div>
+                        </div>
+                    </Transition>
                 </div>
+
                 <!-- Gula Tinggi -->
-                <div class="space-y-1.5">
+                <div class="space-y-2">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-medium text-gray-600">Gula Darah Tinggi</span>
                         <span class="text-xs font-bold text-primary">{{ stats.countHighSugar }}/{{ stats.analyzedPatients }} pasien</span>
@@ -45,10 +75,39 @@
                         <div class="h-full rounded-full bg-gradient-to-r from-primary to-primary-dark transition-all duration-700"
                             :style="`width:${stats.pctHighSugar}%`"></div>
                     </div>
-                    <p class="text-[11px] text-gray-400">{{ stats.pctHighSugar }}% dari total pasien</p>
+                    <div class="flex items-center justify-between">
+                        <p class="text-[11px] text-gray-400">{{ stats.pctHighSugar }}% dari total pasien</p>
+                        <button v-if="stats.countHighSugar > 0"
+                            @click="openPanel = openPanel === 'sugar' ? null : 'sugar'"
+                            class="text-[11px] text-primary hover:underline flex items-center gap-1 transition">
+                            {{ openPanel === 'sugar' ? 'Sembunyikan' : 'Lihat daftar' }}
+                            <svg class="w-3 h-3 transition-transform" :class="openPanel === 'sugar' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <Transition name="slide-fade">
+                        <div v-if="openPanel === 'sugar'" class="rounded-xl border border-red-100 bg-red-50/50 overflow-hidden">
+                            <div v-for="p in stats.patientsHighSugar" :key="p.id"
+                                class="flex items-center justify-between px-3 py-2 border-b border-red-100/50 last:border-0 hover:bg-red-50 transition">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-[10px]">
+                                        {{ p.name.charAt(0).toUpperCase() }}
+                                    </div>
+                                    <Link :href="`/admin/patients/${p.id}`" class="text-xs font-medium text-gray-700 hover:text-primary hover:underline truncate max-w-[100px]">
+                                        {{ p.name }}
+                                    </Link>
+                                </div>
+                                <span class="text-[11px] font-mono font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                                    {{ p.blood_sugar }} mg/dL
+                                </span>
+                            </div>
+                        </div>
+                    </Transition>
                 </div>
+
                 <!-- Obesitas -->
-                <div class="space-y-1.5">
+                <div class="space-y-2">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-medium text-gray-600">Obesitas (BMI ≥25)</span>
                         <span class="text-xs font-bold text-primary">{{ stats.countObesity }}/{{ stats.analyzedPatients }} pasien</span>
@@ -57,8 +116,37 @@
                         <div class="h-full rounded-full bg-gradient-to-r from-primary to-primary-dark transition-all duration-700"
                             :style="`width:${stats.pctObesity}%`"></div>
                     </div>
-                    <p class="text-[11px] text-gray-400">{{ stats.pctObesity }}% dari total pasien</p>
+                    <div class="flex items-center justify-between">
+                        <p class="text-[11px] text-gray-400">{{ stats.pctObesity }}% dari total pasien</p>
+                        <button v-if="stats.countObesity > 0"
+                            @click="openPanel = openPanel === 'obesity' ? null : 'obesity'"
+                            class="text-[11px] text-primary hover:underline flex items-center gap-1 transition">
+                            {{ openPanel === 'obesity' ? 'Sembunyikan' : 'Lihat daftar' }}
+                            <svg class="w-3 h-3 transition-transform" :class="openPanel === 'obesity' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <Transition name="slide-fade">
+                        <div v-if="openPanel === 'obesity'" class="rounded-xl border border-red-100 bg-red-50/50 overflow-hidden">
+                            <div v-for="p in stats.patientsObesity" :key="p.id"
+                                class="flex items-center justify-between px-3 py-2 border-b border-red-100/50 last:border-0 hover:bg-red-50 transition">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-[10px]">
+                                        {{ p.name.charAt(0).toUpperCase() }}
+                                    </div>
+                                    <Link :href="`/admin/patients/${p.id}`" class="text-xs font-medium text-gray-700 hover:text-primary hover:underline truncate max-w-[100px]">
+                                        {{ p.name }}
+                                    </Link>
+                                </div>
+                                <span class="text-[11px] font-mono font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                                    BMI {{ p.bmi }}
+                                </span>
+                            </div>
+                        </div>
+                    </Transition>
                 </div>
+
             </div>
         </div>
 
@@ -100,7 +188,7 @@
 </template>
 
 <script setup>
-import { computed, h } from 'vue';
+import { computed, h, ref } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { Bar } from 'vue-chartjs';
@@ -113,6 +201,9 @@ const props = defineProps({
     recentPatients: Array,
     monthlyChart: Array,
 });
+
+// which risk panel is open: 'bp' | 'sugar' | 'obesity' | null
+const openPanel = ref(null);
 
 const currentYear = new Date().getFullYear();
 
@@ -160,3 +251,17 @@ const StatCard = {
     }
 };
 </script>
+
+<style scoped>
+.slide-fade-enter-active {
+    transition: all 0.25s ease-out;
+}
+.slide-fade-leave-active {
+    transition: all 0.2s ease-in;
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    opacity: 0;
+    transform: translateY(-6px);
+}
+</style>
