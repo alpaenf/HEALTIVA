@@ -20,11 +20,11 @@
             </div>
             <!-- Quantitative Analysis Stats -->
             <div class="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-gray-100 flex flex-col justify-center text-center">
-                <p class="text-xl sm:text-2xl font-bold text-[#B92521]">{{ stats.pctHighBp }}%</p>
-                <p class="text-[11px] sm:text-xs text-gray-500 mt-0.5">Risiko Hipertensi</p>
+                <p class="text-xl sm:text-2xl font-bold text-primary">{{ stats.pctHighBp }}%</p>
+                <p class="text-[11px] sm:text-xs text-gray-500 mt-0.5">Berisiko Hipertensi</p>
             </div>
             <div class="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-gray-100 flex flex-col justify-center text-center">
-                <p class="text-xl sm:text-2xl font-bold text-[#B74443]">{{ stats.pctObesity }}%</p>
+                <p class="text-xl sm:text-2xl font-bold text-primary">{{ stats.pctObesity }}%</p>
                 <p class="text-[11px] sm:text-xs text-gray-500 mt-0.5">Berisiko Obesitas</p>
             </div>
         </div>

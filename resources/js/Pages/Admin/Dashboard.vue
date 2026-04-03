@@ -15,10 +15,51 @@
             <StatCard :value="stats.newPatientsThisMonth" label="Pasien Baru (Bulan Ini)" color="orange" class="animate-fade-in-up delay-300" />
         </div>
 
-        <div class="grid grid-cols-3 gap-4 mb-6">
-            <StatCard :value="stats.pctHighBp + '%'" label="Risiko Hipertensi" color="red" class="animate-fade-in-up delay-400" />
-            <StatCard :value="stats.pctHighSugar + '%'" label="Risiko Gula Tinggi" color="orange" class="animate-fade-in-up delay-500" />
-            <StatCard :value="stats.pctObesity + '%'" label="Risiko Obesitas" color="purple" class="animate-fade-in-up delay-600" />
+        <!-- Risk Summary Card -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover-lift animate-fade-in-up delay-400 mb-6">
+            <div class="flex items-center gap-2 mb-4">
+                <div class="w-2 h-5 rounded-full bg-primary"></div>
+                <h3 class="font-semibold text-gray-700 text-sm">Ringkasan Risiko Pasien</h3>
+                <span class="ml-auto text-xs text-gray-400">dari {{ stats.analyzedPatients }} pasien tercatat</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <!-- Hipertensi -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium text-gray-600">Hipertensi</span>
+                        <span class="text-xs font-bold text-primary">{{ stats.countHighBp }}/{{ stats.analyzedPatients }} pasien</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full bg-gradient-to-r from-primary to-primary-dark transition-all duration-700"
+                            :style="`width:${stats.pctHighBp}%`"></div>
+                    </div>
+                    <p class="text-[11px] text-gray-400">{{ stats.pctHighBp }}% dari total pasien</p>
+                </div>
+                <!-- Gula Tinggi -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium text-gray-600">Gula Darah Tinggi</span>
+                        <span class="text-xs font-bold text-primary">{{ stats.countHighSugar }}/{{ stats.analyzedPatients }} pasien</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full bg-gradient-to-r from-primary to-primary-dark transition-all duration-700"
+                            :style="`width:${stats.pctHighSugar}%`"></div>
+                    </div>
+                    <p class="text-[11px] text-gray-400">{{ stats.pctHighSugar }}% dari total pasien</p>
+                </div>
+                <!-- Obesitas -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium text-gray-600">Obesitas (BMI ≥25)</span>
+                        <span class="text-xs font-bold text-primary">{{ stats.countObesity }}/{{ stats.analyzedPatients }} pasien</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full bg-gradient-to-r from-primary to-primary-dark transition-all duration-700"
+                            :style="`width:${stats.pctObesity}%`"></div>
+                    </div>
+                    <p class="text-[11px] text-gray-400">{{ stats.pctObesity }}% dari total pasien</p>
+                </div>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-5">
@@ -105,14 +146,14 @@ const StatCard = {
     props: ['value', 'label', 'color'],
     setup(props) {
         const colorMap = {
-            blue: 'from-blue-500 to-blue-600',
-            green: 'from-green-500 to-green-600',
-            purple: 'from-violet-500 to-violet-600',
-            orange: 'from-orange-400 to-orange-500',
-            red: 'from-red-500 to-red-600',
+            blue:   'from-primary/70 to-primary',
+            green:  'from-primary/50 to-primary/80',
+            purple: 'from-primary to-primary-dark',
+            orange: 'from-primary/60 to-primary/90',
+            red:    'from-primary to-primary-dark',
         };
         return () => h('div', { class: 'bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover-lift' }, [
-            h('div', { class: `w-3 h-3 bg-gradient-to-br ${colorMap[props.color]} rounded-full mb-3` }),
+            h('div', { class: `w-3 h-3 bg-gradient-to-br ${colorMap[props.color] ?? colorMap.red} rounded-full mb-3` }),
             h('p', { class: 'text-2xl font-bold text-gray-800' }, props.value),
             h('p', { class: 'text-xs text-gray-500 mt-0.5' }, props.label),
         ]);
