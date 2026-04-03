@@ -111,15 +111,19 @@ class AdminUserController extends Controller
         $excelFileName = 'pasien_pemeriksaan_terbaru_' . now()->format('Ymd_His') . '.xlsx';
 
         $data = [
+            ['<b>LAPORAN DATA REKAM MEDIS & PASIEN (Administrator)</b>'],
+            ['<b>SISTEM MANAJEMEN KESEHATAN TINGKAT PERTAMA</b>'],
+            ['<b>Tanggal Cetak:</b>', now()->format('d/m/Y H:i')],
+            [''],
             [
-                '<b>ID</b>', '<b>NIK</b>', '<b>Nama</b>', '<b>Gender</b>', '<b>Tanggal Lahir</b>', '<b>No HP</b>', 
-                '<b>Total Data</b>', '<b>Terdaftar</b>',
-                '<b>Tanggal Pemeriksaan Terakhir</b>',
-                '<b>Berat Badan (kg)</b>', '<b>Tinggi Badan (cm)</b>', '<b>IMT</b>', '<b>Hasil IMT</b>',
-                '<b>Sistolik (mmHg)</b>', '<b>Diastolik (mmHg)</b>', '<b>Hasil Sistolik/Diastolik</b>',
+                '<b>ID</b>', '<b>NIK</b>', '<b>Nama Pasien</b>', '<b>Gender</b>', '<b>Tanggal Lahir</b>', '<b>No HP</b>', 
+                '<b>Total Data</b>', '<b>Tanggal Terdaftar</b>',
+                '<b>Tgl Pemeriksaan Terakhir</b>',
+                '<b>Berat Badan (kg)</b>', '<b>Tinggi Badan (cm)</b>', '<b>IMT</b>', '<b>Kesimpulan IMT</b>',
+                '<b>Sistolik (mmHg)</b>', '<b>Diastolik (mmHg)</b>', '<b>Kesimpulan Tensi</b>',
                 '<b>Gula Darah (mg/dL)</b>',
                 '<b>Suhu Tubuh (°C)</b>', '<b>Detak Jantung (bpm)</b>',
-                '<b>Catatan</b>'
+                '<b>Catatan Medis</b>'
             ]
         ];
 

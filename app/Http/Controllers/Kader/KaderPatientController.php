@@ -81,19 +81,24 @@ class KaderPatientController extends Controller
     {
         $records = $patient->healthRecords()->latest('recorded_at')->get();
 
-        $excelFileName = 'Riwayat_Pemeriksaan_' . str_replace(' ', '_', $patient->name) . '_' . date('Ymd_His') . '.xlsx';
+        $excelFileName = 'Riwayat_Kesehatan_' . str_replace(' ', '_', $patient->name) . '_' . date('Ymd_His') . '.xlsx';
 
         $data = [
+            ['<b>REKAM MEDIS PASIEN</b>'],
+            ['<b>Nama Pasien:</b>', $patient->name],
+            ['<b>NIK:</b>', $patient->nik],
+            ['<b>Tanggal Lahir:</b>', $patient->date_of_birth?->format('d/m/Y') ?? '-'],
+            [''],
             [
-                '<b>Tanggal</b>', '<b>Sistolik (mmHg)</b>', '<b>Diastolik (mmHg)</b>', '<b>Detak Jantung (bpm)</b>', 
+                '<b>Tanggal Pemeriksaan</b>', '<b>Sistolik (mmHg)</b>', '<b>Diastolik (mmHg)</b>', '<b>Detak Jantung (bpm)</b>', 
                 '<b>Gula Darah (mg/dL)</b>', '<b>Berat Badan (kg)</b>', '<b>Tinggi Badan (cm)</b>', 
-                '<b>Suhu Tubuh (C)</b>', '<b>Saturasi Oksigen (%)</b>', '<b>Catatan</b>'
+                '<b>Suhu Tubuh (°C)</b>', '<b>Saturasi Oksigen (%)</b>', '<b>Catatan Medis</b>'
             ]
         ];
 
         foreach ($records as $record) {
             $data[] = [
-                $record->recorded_at ? $record->recorded_at->format('Y-m-d H:i') : '-',
+                $record->recorded_at ? $record->recorded_at->format('d/m/Y H:i') : '-',
                 $record->systolic ?? '-',
                 $record->diastolic ?? '-',
                 $record->heart_rate ?? '-',
@@ -103,6 +108,77 @@ class KaderPatientController extends Controller
                 $record->temperature ?? '-',
                 $record->oxygen_saturation ?? '-',
                 $record->notes ?? '-'
+            ];
+        }
+
+        return response()->streamDownload(function () use ($data) {
+            $xlsx = \Shuchkin\SimpleXLSXGen::fromArray($data);
+            $xlsx->saveAs('php://output');
+        }, $excelFileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
+    }
+
+    public function exportAll(Request $request)
+    {
+        $search = $request->input('search');
+
+        $patients = Patient::when($search, function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nik', 'like', "%{$search}%");
+            })
+            ->withCount('healthRecords')
+            ->with(['healthRecords' => function ($query) {
+                $query->latest('recorded_at')->take(1);
+            }])
+            ->latest()
+            ->get();
+
+        $excelFileName = 'Laporan_Semua_Pasien_Kader_' . now()->format('Ymd_His') . '.xlsx';
+
+        $data = [
+            ['<b>LAPORAN DATA REKAM MEDIS (Semua Pasien)</b>'],
+            ['<b>FASILITAS KESEHATAN TINGKAT PERTAMA / POSYANDU</b>'],
+            ['<b>Tanggal Cetak:</b>', now()->format('d/m/Y H:i')],
+            [''],
+            [
+                '<b>ID</b>', '<b>NIK</b>', '<b>Nama Pasien</b>', '<b>Gender</b>', '<b>Tanggal Lahir</b>', '<b>No HP</b>', 
+                '<b>Total Data</b>', '<b>Tanggal Terdaftar</b>',
+                '<b>Tgl Pemeriksaan Terakhir</b>',
+                '<b>Berat Badan (kg)</b>', '<b>Tinggi Badan (cm)</b>', '<b>IMT</b>', '<b>Kesimpulan IMT</b>',
+                '<b>Sistolik (mmHg)</b>', '<b>Diastolik (mmHg)</b>', '<b>Kesimpulan Tensi</b>',
+                '<b>Gula Darah (mg/dL)</b>',
+                '<b>Suhu Tubuh (°C)</b>', '<b>Detak Jantung (bpm)</b>',
+                '<b>Catatan Medis</b>'
+            ]
+        ];
+
+        foreach ($patients as $p) {
+            $latestRecord = $p->healthRecords->first();
+            
+            $data[] = [
+                $p->id,
+                $p->nik,
+                $p->name,
+                $p->gender ?? '-',
+                $p->date_of_birth?->format('d/m/Y') ?? '-',
+                $p->phone ?? '-',
+                $p->health_records_count,
+                $p->created_at->format('d/m/Y'),
+                
+                // Detail Pemeriksaan Terakhir
+                $latestRecord ? ($latestRecord->recorded_at?->format('d/m/Y H:i') ?? '-') : 'Belum Ada Data',
+                $latestRecord->weight ?? '-',
+                $latestRecord->height ?? '-',
+                $latestRecord ? $latestRecord->bmi : '-',
+                $latestRecord ? $latestRecord->bmi_status : '-',
+                $latestRecord->systolic ?? '-',
+                $latestRecord->diastolic ?? '-',
+                $latestRecord ? $latestRecord->blood_pressure_status : '-',
+                $latestRecord->blood_sugar ?? '-',
+                $latestRecord->temperature ?? '-',
+                $latestRecord->heart_rate ?? '-',
+                $latestRecord->notes ?? '-'
             ];
         }
 

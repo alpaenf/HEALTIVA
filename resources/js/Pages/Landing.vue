@@ -351,50 +351,6 @@
             </div>
         </section>
 
-        <!-- â”€â”€ TESTIMONI PENGGUNA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
-        <section class="relative py-20 px-6 bg-white overflow-hidden">
-            <!-- Wave top from Cara Kerja -->
-            <div class="absolute top-0 left-0 right-0 pointer-events-none">
-                <svg viewBox="0 0 1440 50" fill="none" class="w-full" preserveAspectRatio="none">
-                    <path d="M0,25 C480,0 960,50 1440,25 L1440,0 L0,0 Z" fill="#f9fafb" opacity="0.7"/>
-                </svg>
-            </div>
-            <!-- Subtle ring ornament top-right -->
-            <svg class="absolute top-8 right-8 w-32 h-32 text-primary/5 svg-spin-slow pointer-events-none" viewBox="0 0 128 128" fill="none">
-                <circle cx="64" cy="64" r="58" stroke="currentColor" stroke-width="1" stroke-dasharray="10 7"/>
-                <circle cx="64" cy="64" r="38" stroke="currentColor" stroke-width="1" stroke-dasharray="5 9"/>
-            </svg>
-            <!-- Cross marks -->
-            <svg class="absolute top-16 left-[5%] text-primary/10 w-5 h-5 svg-drift-2 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16M4 12h16"/></svg>
-            <svg class="absolute bottom-16 right-[8%] text-primary/10 w-4 h-4 svg-drift-1 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16M4 12h16"/></svg>
-            <div class="max-w-5xl mx-auto">
-                <div class="reveal text-center mb-14" data-delay="0">
-                    <span class="text-xs font-bold text-primary uppercase tracking-widest">Kisah Mereka</span>
-                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mt-2">Lebih Sehat bersama HEALTIVA</h2>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div v-for="(t, i) in testimonials" :key="i" class="reveal bg-white p-6 rounded-3xl border border-gray-100 shadow-lg shadow-gray-100/50 relative" :data-delay="i * 150">
-                        <!-- Quote icon bg -->
-                        <svg class="absolute top-4 right-4 w-12 h-12 text-gray-50" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
-                        
-                        <div class="flex items-center gap-3 mb-4 relative z-10">
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary-dark text-white flex items-center justify-center font-bold text-lg shadow-md">
-                                {{ t.name.charAt(0) }}
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-900 text-sm">{{ t.name }}</h4>
-                                <p class="text-xs text-gray-500">{{ t.role }}</p>
-                            </div>
-                        </div>
-                        <p class="text-sm text-gray-600 leading-relaxed relative z-10">"{{ t.quote }}"</p>
-                        <div class="flex text-yellow-400 mt-4 relative z-10">
-                            <svg v-for="s in 5" :key="s" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
         <!-- â”€â”€ CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <section class="relative py-24 px-6 bg-gradient-to-br from-primary via-primary to-primary-dark overflow-hidden">
