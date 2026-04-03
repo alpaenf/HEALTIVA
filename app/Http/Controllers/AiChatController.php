@@ -87,7 +87,7 @@ class AiChatController extends Controller
         ];
 
         $geminiKey = env('GEMINI_API_KEY', '');
-        $geminiModel = env('GEMINI_MODEL', 'gemini-2.0-flash-lite');
+        $geminiModel = env('GEMINI_MODEL', 'gemini-3.0-flash');
         $reply = null;
 
         if ($geminiKey) {
