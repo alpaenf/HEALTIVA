@@ -19,12 +19,12 @@
             </div>
 
             <!-- Nav Links -->
-            <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-2">Menu Utama</p>
+            <nav class="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 mb-1.5">Menu Utama</p>
 
                 <Link href="/admin/dashboard"
                     :class="isActive('/admin/dashboard') ? 'bg-[#FFF5F5] text-primary font-semibold' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group">
+                    class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200 group">
                     <span :class="isActive('/admin/dashboard') ? 'bg-primary/10' : 'bg-gray-100 group-hover:bg-gray-200'"
                         class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0">
                         <svg class="w-4 h-4" :class="isActive('/admin/dashboard') ? 'text-primary' : 'text-gray-500'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +36,7 @@
 
                 <Link href="/admin/patients"
                     :class="isActive('/admin/patients') ? 'bg-[#FFF5F5] text-primary font-semibold' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group">
+                    class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200 group">
                     <span :class="isActive('/admin/patients') ? 'bg-primary/10' : 'bg-gray-100 group-hover:bg-gray-200'"
                         class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0">
                         <svg class="w-4 h-4" :class="isActive('/admin/patients') ? 'text-primary' : 'text-gray-500'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,7 +48,7 @@
 
                 <Link href="/admin/kaders"
                     :class="isActive('/admin/kaders') ? 'bg-[#FFF5F5] text-primary font-semibold' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group">
+                    class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200 group">
                     <span :class="isActive('/admin/kaders') ? 'bg-primary/10' : 'bg-gray-100 group-hover:bg-gray-200'"
                         class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0">
                         <svg class="w-4 h-4" :class="isActive('/admin/kaders') ? 'text-primary' : 'text-gray-500'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,7 +60,7 @@
 
                 <Link href="/admin/knowledge"
                     :class="isActive('/admin/knowledge') ? 'bg-[#FFF5F5] text-primary font-semibold' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group">
+                    class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200 group">
                     <span :class="isActive('/admin/knowledge') ? 'bg-primary/10' : 'bg-gray-100 group-hover:bg-gray-200'"
                         class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0">
                         <svg class="w-4 h-4" :class="isActive('/admin/knowledge') ? 'text-primary' : 'text-gray-500'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,12 +70,12 @@
                     Knowledge Base AI
                 </Link>
 
-                <div class="my-2 border-t border-gray-100"></div>
-                <p class="px-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Informasi Tambahan</p>
+                <div class="my-1.5 border-t border-gray-100"></div>
+                <p class="px-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Informasi Tambahan</p>
 
                 <Link href="/edukasi"
                     :class="isActive('/edukasi') ? 'bg-[#FFF5F5] text-primary font-semibold' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group">
+                    class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200 group">
                     <span :class="isActive('/edukasi') ? 'bg-primary/10' : 'bg-gray-100 group-hover:bg-gray-200'"
                         class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0">
                         <svg class="w-4 h-4" :class="isActive('/edukasi') ? 'text-primary' : 'text-gray-500'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,7 +87,7 @@
 
                 <Link href="/standar-normal"
                     :class="isActive('/standar-normal') ? 'bg-[#FFF5F5] text-primary font-semibold' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group">
+                    class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200 group">
                     <span :class="isActive('/standar-normal') ? 'bg-primary/10' : 'bg-gray-100 group-hover:bg-gray-200'"
                         class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0">
                         <svg class="w-4 h-4" :class="isActive('/standar-normal') ? 'text-primary' : 'text-gray-500'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,14 +99,14 @@
             </nav>
 
             <!-- Bottom: user info + logout -->
-            <div class="px-3 py-4 border-t border-gray-100 flex flex-col gap-1">
-                <div class="px-3 py-2.5 border border-gray-100 bg-gray-50 rounded-xl mb-1.5">
+            <div class="px-3 py-3 border-t border-gray-100 flex flex-col gap-1">
+                <div class="px-3 py-2 border border-gray-100 bg-gray-50 rounded-xl mb-1">
                     <p class="text-xs font-bold text-gray-800 truncate">{{ $page.props.auth?.user?.name }}</p>
                     <p class="text-[10px] text-gray-400 truncate">{{ $page.props.auth?.user?.email }}</p>
                 </div>
 
                 <button @click="logout"
-                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 group">
+                    class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-red-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 group">
                     <span class="w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 flex items-center justify-center transition-colors flex-shrink-0 shadow-sm">
                         <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>

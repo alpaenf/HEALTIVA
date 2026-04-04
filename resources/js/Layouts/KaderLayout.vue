@@ -19,7 +19,7 @@
             </div>
 
             <!-- Nav -->
-            <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            <nav class="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
                 <NavLink href="/kader/dashboard" :active="isActive('/kader/dashboard')">
                     <template #icon>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,7 +38,7 @@
                     Data Pasien
                 </NavLink>
 
-                <div class="my-2 border-t border-gray-100"></div>
+                <div class="my-1.5 border-t border-gray-100"></div>
                 <p class="px-3 text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Informasi</p>
 
                 <NavLink href="/edukasi" :active="isActive('/edukasi')">
@@ -61,14 +61,14 @@
             </nav>
 
             <!-- Bottom: user info + logout -->
-            <div class="px-3 py-4 border-t border-gray-100 flex flex-col gap-1">
-                <div class="px-3 py-2.5 border border-gray-100 bg-gray-50 rounded-xl mb-1.5">
+            <div class="px-3 py-3 border-t border-gray-100 flex flex-col gap-1">
+                <div class="px-3 py-2 border border-gray-100 bg-gray-50 rounded-xl mb-1">
                     <p class="text-xs font-bold text-gray-800 truncate">{{ user?.name }}</p>
                     <p class="text-[10px] text-gray-400 truncate">{{ user?.email }}</p>
                 </div>
 
                 <button @click="logout"
-                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 group">
+                    class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-red-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 group">
                     <span class="w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 flex items-center justify-center transition-colors flex-shrink-0 shadow-sm">
                         <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
@@ -331,7 +331,7 @@ const NavLink = {
     setup(props, { slots }) {
         return () => h(Link, {
             href: props.href,
-            class: `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group ${
+            class: `flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200 group ${
                 props.active
                     ? 'bg-[#FFF5F5] text-primary font-semibold'
                     : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
