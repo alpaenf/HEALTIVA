@@ -491,7 +491,7 @@ const getRelatedVideos = (text) => {
 };
 
 const formatDate = (d) => new Date(d).toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true
 });
 
 const formatInline = (text) =>

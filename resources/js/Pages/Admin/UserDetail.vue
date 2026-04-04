@@ -348,7 +348,7 @@ const age = computed(() => {
 });
 
 const formatDate = (d) => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-const formatDateFull = (d) => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+const formatDateFull = (d) => new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
 
 const bpClass = (sys, dia) => {
     if (sys >= 140 || dia >= 90) return 'bg-red-100 text-red-700';

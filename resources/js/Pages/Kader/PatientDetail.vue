@@ -402,7 +402,7 @@ const lineChartOptions = {
     },
 };
 
-const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+const formatDate = (d) => d ? new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }) : '-';
 
 const formatAge = (dob) => {
     const diff = Date.now() - new Date(dob).getTime();
